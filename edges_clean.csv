@@ -1,0 +1,134 @@
+u,v,km,type,kmph,name,travel_time_mins
+sangli_st_stand,station_road,0.408,main,30.0,Station Road,0.816
+station_road,sangli_railway_stn,0.58,main,30.0,Station Road,1.16
+station_road,rest_station_rd,0.135,local,20.0,,0.405
+rest_station_rd,balaji_nagar,1.212,local,20.0,,3.636
+sangli_railway_stn,civil_hospital,0.729,main,30.0,,1.458
+civil_hospital,balaji_nagar,0.48,local,20.0,,1.44
+balaji_nagar,shivaji_nagar,0.788,local,20.0,,2.3640000000000003
+shivaji_nagar,timber_area,0.98,local,20.0,,2.94
+timber_area,timber_area_res,0.306,local,20.0,,0.9179999999999999
+timber_area_res,station_road,0.84,local,20.0,,2.5199999999999996
+timber_area,sangli_st_stand,0.742,local,20.0,,2.226
+sangli_st_stand,harbhat_road,0.472,main,30.0,Harbhat Road,0.944
+harbhat_road,rest_harbhat,0.118,local,20.0,,0.354
+rest_harbhat,gaon_bhag,0.574,local,20.0,,1.7219999999999998
+gaon_bhag,rest_gaon_bhag,0.191,local,20.0,,0.573
+rest_gaon_bhag,rajwada,0.654,local,20.0,,1.962
+harbhat_road,rajwada,0.515,main,30.0,Harbhat Road,1.03
+gaon_bhag,khanbhag,0.625,local,20.0,,1.875
+sangli_st_stand,khanbhag,0.942,main,30.0,,1.884
+khanbhag,market_yard,0.66,main,30.0,Market Yard Road,1.32
+khanbhag,rest_market_yard,0.463,local,20.0,,1.389
+rest_market_yard,market_yard,0.282,local,20.0,,0.8459999999999999
+market_yard,sangli_railway_stn,2.09,main,30.0,Market Yard Road,4.18
+rajwada,rest_rajwada,0.211,local,20.0,,0.633
+rest_rajwada,rajwada_peth,0.6,local,20.0,,1.7999999999999998
+rajwada_peth,ganapati_mandir,0.272,local,20.0,,0.8160000000000001
+ganapati_mandir,rajwada,0.508,local,20.0,,1.524
+ganapati_mandir,irwin_bridge,0.734,main,30.0,Ganapati Mandir Road,1.468
+irwin_bridge,amrai_garden,0.448,local,20.0,,1.344
+amrai_garden,rest_amrai,0.23,local,20.0,,0.69
+rest_amrai,sangli_south_jn,1.291,local,20.0,,3.8729999999999998
+sangli_south_jn,ganapati_mandir,0.81,local,20.0,,2.43
+sangli_south_jn,shivaji_nagar,1.152,main,30.0,,2.304
+sangli_south_jn,south_bridge,1.231,main,30.0,,2.462
+amrai_garden,rajwada,1.305,local,20.0,,3.915
+irwin_bridge,sangliwadi,1.112,bridge,25.0,Irwin Bridge,2.6688000000000005
+south_bridge,sangliwadi_east,1.289,bridge,25.0,Sangli South Bridge,3.0935999999999995
+sangliwadi_east,sangliwadi,0.877,local,20.0,,2.6310000000000002
+sangli_st_stand,smr_north,2.171,arterial,40.0,Sangli-Miraj Road,3.2565
+shivaji_nagar,smr_north,1.157,arterial,40.0,Sangli-Miraj Road,1.7355
+smr_north,smr_mid,0.872,arterial,40.0,Sangli-Miraj Road,1.308
+smr_mid,dhamani_road,0.525,main,30.0,Dhamani Road,1.05
+smr_mid,vishrambag_chowk,0.933,arterial,40.0,Sangli-Miraj Road,1.3995000000000002
+vishrambag_chowk,smr_south,2.315,arterial,40.0,Sangli-Miraj Road,3.4724999999999997
+walchand_gate,smr_south,1.88,arterial,40.0,Sangli-Miraj Road,2.82
+smr_south,miraj_junction,3.878,arterial,40.0,Sangli-Miraj Road,5.817
+smr_south,miraj_medical,3.721,main,30.0,,7.442
+smr_south,kupwad_junction,4.189,main,30.0,Kupwad Road,8.378
+vishrambag_east,kupwad_link,2.079,main,30.0,Kupwad Link Road,4.158
+kupwad_link,kupwad_junction,1.622,main,30.0,Kupwad Link Road,3.244
+kupwad_link,smr_south,2.66,main,30.0,,5.32
+dhamani_road,vishrambag_chowk,0.61,main,30.0,Dhamani Road,1.22
+vishrambag_chowk,campus_gate_north,0.505,main,30.0,,1.01
+campus_gate_north,walchand_gate,0.351,main,30.0,,0.702
+campus_gate_north,vishrambag_east,0.739,main,30.0,,1.478
+vishrambag_east,walchand_gate,0.839,local,20.0,,2.517
+vishrambag_chowk,college_corner,0.477,local,20.0,,1.431
+college_corner,vishrambag_south,0.424,local,20.0,,1.272
+vishrambag_south,vishrambag_chowk,0.81,local,20.0,,2.43
+walchand_gate,wce_academic,0.225,local,20.0,Campus Road,0.6749999999999999
+wce_academic,campus_inner,0.356,local,20.0,Campus Road,1.068
+campus_inner,wce_hostel_a,0.191,local,20.0,Campus Road,0.573
+wce_hostel_a,wce_hostel_b,0.182,local,20.0,Campus Road,0.546
+wce_hostel_b,wce_hostel_c,0.245,local,20.0,Campus Road,0.735
+wce_hostel_c,campus_inner,0.3,local,20.0,Campus Road,0.8999999999999999
+wce_hostel_a,wce_hostel_girls,0.371,local,20.0,Campus Road,1.113
+wce_hostel_girls,campus_gate_north,0.417,local,20.0,,1.2510000000000001
+wce_hostel_girls,wce_staff_qtrs,0.216,local,20.0,,0.648
+wce_staff_qtrs,government_colony,0.168,local,20.0,,0.5040000000000001
+government_colony,vishrambag_east,0.256,main,30.0,,0.512
+wce_academic,willingdon_college,0.126,local,20.0,,0.378
+willingdon_college,college_corner,0.323,local,20.0,,0.9690000000000001
+walchand_gate,campus_inner,0.169,local,20.0,Campus Road,0.507
+college_corner,willingdon_hostel,0.211,local,20.0,,0.633
+willingdon_hostel,vishrambag_res,0.237,local,20.0,,0.711
+vishrambag_res,vishrambag_society,0.416,local,20.0,,1.248
+vishrambag_society,vishrambag_south,0.407,local,20.0,,1.221
+vishrambag_res,dhamani_road,1.066,local,20.0,,3.198
+vishrambag_chowk,rest_chowk_cafe,0.168,local,20.0,,0.5040000000000001
+rest_chowk_cafe,rest_food_lab,0.312,local,20.0,,0.9359999999999999
+rest_food_lab,rest_world_foodies,0.28,local,20.0,,0.8400000000000001
+rest_world_foodies,college_corner,0.397,local,20.0,,1.191
+rest_food_lab,dhamani_road,0.482,local,20.0,,1.446
+rest_vishram,vishrambag_chowk,0.211,local,20.0,,0.633
+rest_vishram,wce_academic,0.234,local,20.0,,0.7020000000000001
+rest_campus_corner,wce_academic,0.113,local,20.0,,0.339
+rest_campus_corner,walchand_gate,0.179,local,20.0,,0.5369999999999999
+rest_belge_bistro,dhamani_road,0.246,local,20.0,,0.738
+rest_belge_bistro,rest_dhamani,0.285,local,20.0,,0.855
+rest_dhamani,dhamani_road,0.286,local,20.0,,0.8579999999999999
+miraj_junction,miraj_chowk,0.468,main,30.0,,0.936
+miraj_chowk,miraj_bus_stand,0.356,main,30.0,,0.712
+miraj_bus_stand,miraj_res,0.725,local,20.0,,2.175
+miraj_chowk,rest_miraj_station,0.203,local,20.0,,0.6090000000000001
+rest_miraj_station,miraj_station_area,0.564,local,20.0,,1.6919999999999997
+miraj_station_area,miraj_junction,0.864,local,20.0,,2.592
+miraj_bus_stand,rest_miraj_bus,0.168,local,20.0,,0.5040000000000001
+rest_miraj_bus,miraj_res,0.892,local,20.0,,2.676
+miraj_junction,miraj_medical,0.482,main,30.0,,0.964
+miraj_medical,rest_miraj_medical,0.294,local,20.0,,0.882
+rest_miraj_medical,miraj_wanless,0.507,local,20.0,,1.5210000000000001
+miraj_wanless,miraj_junction,0.574,local,20.0,,1.7219999999999998
+kupwad_junction,kupwad_gaon,3.057,main,30.0,Kupwad Road,6.114
+kupwad_gaon,kupwad_housing,0.638,main,30.0,,1.276
+kupwad_housing,kupwad_midc,0.57,main,30.0,MIDC Road,1.14
+kupwad_midc,rest_kupwad,0.357,local,20.0,,1.071
+rest_kupwad,kupwad_housing,0.282,local,20.0,,0.8459999999999999
+kupwad_junction,madhavnagar_road,6.546,main,30.0,,13.092
+madhavnagar_road,madhavnagar_res,1.602,main,30.0,Madhavnagar Road,3.204
+madhavnagar_res,madhavnagar,0.631,main,30.0,Madhavnagar Road,1.262
+madhavnagar,rest_madhavnagar,0.34,local,20.0,,1.02
+rest_madhavnagar,madhavnagar_res,0.368,local,20.0,,1.104
+madhavnagar_road,market_yard,3.705,main,30.0,Madhavnagar Road,7.41
+madhavnagar,kupwad_midc,8.874,main,30.0,,17.748
+market_yard,ashta_road,2.431,main,30.0,Sangli-Ashta Road,4.862
+amrai_garden,ashta_road,3.516,main,30.0,,7.032
+ashta_road,budhgaon_college,2.933,highway,60.0,Sangli-Islampur Road,2.933
+budhgaon_college,budhgaon,0.531,main,30.0,,1.062
+balaji_nagar,kupwad_junction,5.14,arterial,40.0,Sangli-Kupwad Road,7.71
+civil_hospital,kupwad_link,4.55,arterial,40.0,100 Feet Road Extension,6.824999999999999
+shivaji_nagar,vishrambag_chowk,2.42,arterial,40.0,100 Feet Road,3.63
+sangli_south_jn,smr_north,1.85,arterial,40.0,100 Feet Road (West),2.775
+shivaji_nagar,vishrambag_res,2.05,main,30.0,Old Dhamani Road,4.1
+sangli_st_stand,market_yard,1.22,main,30.0,Market Yard Direct Road,2.44
+smr_north,kupwad_link,3.55,arterial,40.0,Kupwad-Miraj Link,5.324999999999999
+sangliwadi,ashta_road,3.35,main,35.0,Sangliwadi-Ashta Road,5.742857142857143
+kupwad_junction,kupwad_midc,3.25,main,35.0,Kupwad MIDC Main Road,5.571428571428571
+ganapati_mandir,sangliwadi,1.25,bridge,25.0,Irwin Bridge Approach,3.0
+sangliwadi_north,sangliwadi,2.45,main,30.0,Sangliwadi Main Road,4.9
+sangliwadi_north,irwin_bridge,1.75,bridge,25.0,Irwin Bridge North Approach,4.2
+hundred_ft_dmart,shivaji_nagar,0.23,local,20.0,100 Feet Road,0.69
+hundred_ft_dmart,smr_north,1.05,arterial,40.0,100 Feet Road,1.5750000000000002
+hundred_ft_dmart,sangli_south_jn,0.85,main,30.0,100 Feet Road,1.7

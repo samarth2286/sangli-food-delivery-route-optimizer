@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sangli delivery network</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --plane:          #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --muted:          #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --pickup:         #2a78d6;
+    --dropoff:        #eb6834;
+    /* roads are an ORDINAL scale (local < main < arterial < highway), so one
+       neutral hue stepping light to dark, with width stepping too. Neutral
+       rather than a series hue, because the roads are the substrate the map
+       sits on, not the thing the map is about. */
+    --road-1:         #c9c8c1;
+    --road-2:         #a3a29a;
+    --road-3:         #6f6e68;
+    --road-4:         #3d3d39;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --plane:          #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --muted:          #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --pickup:         #3987e5;
+      --dropoff:        #d95926;
+      --road-1:         #3a3a37;
+      --road-2:         #55554f;
+      --road-3:         #85847c;
+      --road-4:         #bdbcb2;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --plane:          #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --muted:          #898781;
+    --gridline:       #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --pickup:         #3987e5;
+    --dropoff:        #d95926;
+    --road-1:         #3a3a37;
+    --road-2:         #55554f;
+    --road-3:         #85847c;
+    --road-4:         #bdbcb2;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #f9f9f7;
+  }
+  :root[data-theme="dark"] body { background: #0d0d0d; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) body { background: #0d0d0d; }
+  }
+  /* the ink variables live on .viz-root, so the text colour has to be set
+     here too - body sits outside that scope and would miss it */
+  .viz-root {
+    background: var(--plane); color: var(--text-primary);
+    min-height: 100vh; padding: 20px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  header { margin-bottom: 14px; }
+  h1 { font-size: 17px; font-weight: 600; margin: 0 0 4px; }
+  .sub { font-size: 13px; color: var(--text-secondary); margin: 0; }
+  .note {
+    font-size: 12px; color: var(--muted); margin: 8px 0 0;
+    max-width: 720px; line-height: 1.5;
+  }
+
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    margin: 14px 0 10px;
+  }
+  button, .chip {
+    font: inherit; font-size: 12.5px;
+    background: var(--surface-1); color: var(--text-secondary);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 10px; cursor: pointer; user-select: none;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  button:hover, .chip:hover { background: var(--gridline); }
+  .chip.off { opacity: .4; }
+  .chip .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .chip .bar { width: 14px; height: 3px; border-radius: 2px; }
+  .spacer { flex: 1; }
+
+  .panel {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  /* scoped to the map only. a bare `svg` selector here would also stretch the
+     tiny inline swatches in the legend to full width. */
+  #svg { display: block; width: 100%; height: 600px; cursor: grab; touch-action: none; }
+  #svg.drag { cursor: grabbing; }
+  .legend svg { display: inline-block; vertical-align: middle; flex: none; }
+
+  .road { fill: none; stroke-linecap: round; }
+  .road.hot { stroke: var(--pickup); }
+  .nodeg { cursor: pointer; }
+  /* no font-size or stroke-width here on purpose. a CSS value would beat the
+     SVG attribute and pin the text in user units, so it would scale with the
+     zoom transform. both are set from JS instead, counter-scaled by view.k. */
+  .nodeg text {
+    fill: var(--text-secondary);
+    paint-order: stroke; stroke: var(--surface-1);
+    pointer-events: none;
+  }
+
+  #tip {
+    position: fixed; pointer-events: none; opacity: 0; transition: opacity .08s;
+    background: var(--surface-1); color: var(--text-primary);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; font-size: 12px; line-height: 1.45;
+    box-shadow: 0 4px 14px rgba(0,0,0,.16); z-index: 50; max-width: 250px;
+  }
+  #tip b { font-weight: 600; }
+  #tip .k { color: var(--muted); }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    padding: 10px 14px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-secondary);
+  }
+  .legend .item { display: inline-flex; align-items: center; gap: 6px; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th, td {
+    text-align: left; padding: 6px 10px;
+    border-bottom: 1px solid var(--gridline);
+  }
+  th { color: var(--muted); font-weight: 500; position: sticky; top: 0;
+       background: var(--surface-1); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .tablewrap { max-height: 460px; overflow: auto; }
+  .hidden { display: none; }
+
+  .stats {
+    display: flex; gap: 24px; flex-wrap: wrap;
+    padding: 10px 14px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-secondary);
+  }
+  .stats b { display: block; font-size: 17px; color: var(--text-primary);
+             font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="viz-root">
+<div class="wrap">
+
+  <header>
+    <h1>Sangli&ndash;Miraj&ndash;Kupwad delivery network</h1>
+    <p class="sub">79 nodes &middot; 118 roads &middot; 111.2 km &middot; coloured by role in the delivery system</p>
+    <p class="note">
+      Coordinates are approximate. Anchor points (Walchand College, Sangli, Miraj,
+      Kupwad, Madhavnagar) come from public map listings; other points are placed
+      relative to them. This is a simulation informed by the real layout of the
+      area, not surveyed GPS data.
+    </p>
+  </header>
+
+  <div class="controls" id="filters">
+    <span class="chip" data-role="pickup"><span class="dot" style="background:var(--pickup)"></span>pickup</span>
+    <span class="chip" data-role="dropoff"><span class="dot" style="background:var(--dropoff)"></span>dropoff</span>
+    <span class="chip" data-role="structure"><span class="dot" style="background:var(--muted)"></span>junctions</span>
+    <span style="width:10px"></span>
+    <span class="chip" data-road="local"><span class="bar" style="background:var(--road-1)"></span>local</span>
+    <span class="chip" data-road="main"><span class="bar" style="background:var(--road-2)"></span>main</span>
+    <span class="chip" data-road="arterial"><span class="bar" style="background:var(--road-3)"></span>arterial</span>
+    <span class="chip" data-road="highway"><span class="bar" style="background:var(--road-4)"></span>highway</span>
+    <span class="chip" data-road="bridge"><span class="bar" style="background:var(--road-4)"></span>bridge</span>
+    <span class="spacer"></span>
+    <button id="labels">labels: key only</button>
+    <button id="reset">reset view</button>
+    <button id="view">table view</button>
+    <button id="theme">dark</button>
+  </div>
+
+  <div class="panel">
+    <div id="mapview">
+      <svg id="svg"></svg>
+      <div class="legend">
+        <span class="item"><svg width="12" height="12"><rect x="2" y="2" width="8" height="8" fill="var(--pickup)"/></svg> restaurant (pickup)</span>
+        <span class="item"><svg width="12" height="12"><circle cx="6" cy="6" r="4" fill="var(--dropoff)"/></svg> customer area (dropoff)</span>
+        <span class="item"><svg width="12" height="12"><polygon points="6,1.5 10.5,10 1.5,10" fill="var(--dropoff)"/></svg> WCE hostel (highest demand)</span>
+        <span class="item"><svg width="12" height="12"><circle cx="6" cy="6" r="3" fill="none" stroke="var(--muted)" stroke-width="1.5"/></svg> landmark</span>
+        <span class="item"><svg width="12" height="12"><circle cx="6" cy="6" r="1.8" fill="var(--muted)"/></svg> junction</span>
+        <span class="item"><svg width="26" height="12"><line x1="1" y1="6" x2="25" y2="6" stroke="var(--road-4)" stroke-width="2.5" stroke-dasharray="5 3"/></svg> bridge (flood-critical)</span>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+
+    <div id="tableview" class="hidden">
+      <div class="tablewrap">
+        <table id="tbl"></table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<div id="tip"></div>
+
+<script>
+const DATA = {"nodes": [{"id": "sangli_st_stand", "name": "Sangli ST Bus Stand", "lat": 16.8565, "lon": 74.569, "x": 71.36767391044704, "y": 16.8565, "type": "junction", "role": "structure", "area": "Sangli", "deg": 5, "label": true}, {"id": "station_road", "name": "Station Road", "lat": 16.858, "lon": 74.5715, "x": 71.37006658280117, "y": 16.858, "type": "junction", "role": "structure", "area": "Sangli", "deg": 4, "label": false}, {"id": "harbhat_road", "name": "Harbhat Road", "lat": 16.854, "lon": 74.5668, "x": 71.36556835877539, "y": 16.854, "type": "junction", "role": "structure", "area": "Sangli", "deg": 3, "label": true}, {"id": "gaon_bhag", "name": "Gaon Bhag", "lat": 16.8555, "lon": 74.564, "x": 71.36288856573874, "y": 16.8555, "type": "junction", "role": "structure", "area": "Sangli", "deg": 3, "label": false}, {"id": "timber_area", "name": "Timber Area", "lat": 16.852, "lon": 74.57, "x": 71.36863097938868, "y": 16.852, "type": "junction", "role": "structure", "area": "Sangli", "deg": 3, "label": false}, {"id": "sangli_south_jn", "name": "Sangli South Junction", "lat": 16.8478, "lon": 74.568, "x": 71.36671684150538, "y": 16.8478, "type": "junction", "role": "structure", "area": "Sangli", "deg": 4, "label": false}, {"id": "sangli_railway_stn", "name": "Sangli Railway Station", "lat": 16.8608, "lon": 74.5745, "x": 71.37293778962615, "y": 16.8608, "type": "landmark", "role": "structure", "area": "Sangli", "deg": 3, "label": true}, {"id": "civil_hospital", "name": "Sangli Civil Hospital", "lat": 16.8558, "lon": 74.5752, "x": 71.37360773788531, "y": 16.8558, "type": "landmark", "role": "structure", "area": "Sangli", "deg": 2, "label": false}, {"id": "market_yard", "name": "Market Yard (Turmeric)", "lat": 16.8625, "lon": 74.5595, "x": 71.35858175550129, "y": 16.8625, "type": "landmark", "role": "structure", "area": "Sangli", "deg": 5, "label": true}, {"id": "rajwada", "name": "Rajwada", "lat": 16.8512, "lon": 74.5645, "x": 71.36336710020957, "y": 16.8512, "type": "landmark", "role": "structure", "area": "Sangli", "deg": 5, "label": true}, {"id": "ganapati_mandir", "name": "Ganapati Mandir", "lat": 16.8485, "lon": 74.5628, "x": 71.36174008300875, "y": 16.8485, "type": "landmark", "role": "structure", "area": "Sangli", "deg": 4, "label": true}, {"id": "amrai_garden", "name": "Aamrai Garden", "lat": 16.8455, "lon": 74.5585, "x": 71.35762468655963, "y": 16.8455, "type": "landmark", "role": "structure", "area": "Sangli", "deg": 4, "label": true}, {"id": "irwin_bridge", "name": "Irwin Bridge", "lat": 16.8438, "lon": 74.5608, "x": 71.35982594512544, "y": 16.8438, "type": "junction", "role": "structure", "area": "Sangli", "deg": 3, "label": true}, {"id": "south_bridge", "name": "Sangli South Bridge", "lat": 16.8395, "lon": 74.57, "x": 71.36863097938868, "y": 16.8395, "type": "junction", "role": "structure", "area": "Sangli", "deg": 2, "label": true}, {"id": "khanbhag", "name": "Khanbhag", "lat": 16.8592, "lon": 74.5628, "x": 71.36174008300875, "y": 16.8592, "type": "customer_area", "role": "dropoff", "area": "Sangli", "deg": 4, "label": false}, {"id": "shivaji_nagar", "name": "Shivaji Nagar", "lat": 16.85, "lon": 74.576, "x": 71.37437339303862, "y": 16.85, "type": "customer_area", "role": "dropoff", "area": "Sangli", "deg": 4, "label": false}, {"id": "balaji_nagar", "name": "Balaji Nagar", "lat": 16.8545, "lon": 74.578, "x": 71.37628753092196, "y": 16.8545, "type": "customer_area", "role": "dropoff", "area": "Sangli", "deg": 3, "label": false}, {"id": "timber_area_res", "name": "Timber Area Residential", "lat": 16.8528, "lon": 74.5718, "x": 71.37035370348367, "y": 16.8528, "type": "customer_area", "role": "dropoff", "area": "Sangli", "deg": 2, "label": false}, {"id": "rajwada_peth", "name": "Rajwada Peth", "lat": 16.85, "lon": 74.562, "x": 71.36097442785542, "y": 16.85, "type": "customer_area", "role": "dropoff", "area": "Sangli", "deg": 2, "label": false}, {"id": "sangliwadi", "name": "Sangliwadi", "lat": 16.8362, "lon": 74.5548, "x": 71.3540835314755, "y": 16.8362, "type": "customer_area", "role": "dropoff", "area": "Sangliwadi", "deg": 2, "label": true}, {"id": "sangliwadi_east", "name": "Sangliwadi East", "lat": 16.834, "lon": 74.56, "x": 71.35906028997212, "y": 16.834, "type": "customer_area", "role": "dropoff", "area": "Sangliwadi", "deg": 2, "label": false}, {"id": "rest_harbhat", "name": "Harbhat Road Eatery", "lat": 16.8543, "lon": 74.5675, "x": 71.36623830703454, "y": 16.8543, "type": "restaurant", "role": "pickup", "area": "Sangli", "deg": 2, "label": false}, {"id": "rest_station_rd", "name": "Station Road Restaurant", "lat": 16.8575, "lon": 74.5708, "x": 71.36939663454203, "y": 16.8575, "type": "restaurant", "role": "pickup", "area": "Sangli", "deg": 2, "label": false}, {"id": "rest_gaon_bhag", "name": "Gaon Bhag Khanaval", "lat": 16.8552, "lon": 74.5652, "x": 71.36403704846875, "y": 16.8552, "type": "restaurant", "role": "pickup", "area": "Sangli", "deg": 2, "label": false}, {"id": "rest_rajwada", "name": "Rajwada Family Restaurant", "lat": 16.8508, "lon": 74.5658, "x": 71.36461128983373, "y": 16.8508, "type": "restaurant", "role": "pickup", "area": "Sangli", "deg": 2, "label": false}, {"id": "rest_market_yard", "name": "Market Yard Dhaba", "lat": 16.8615, "lon": 74.561, "x": 71.36001735891378, "y": 16.8615, "type": "restaurant", "role": "pickup", "area": "Sangli", "deg": 2, "label": false}, {"id": "rest_amrai", "name": "Aamrai Garden Cafe", "lat": 16.8462, "lon": 74.5598, "x": 71.35886887618378, "y": 16.8462, "type": "restaurant", "role": "pickup", "area": "Sangli", "deg": 2, "label": false}, {"id": "smr_north", "name": "Sangli-Miraj Rd (north)", "lat": 16.851, "lon": 74.585, "x": 71.38298701351354, "y": 16.851, "type": "junction", "role": "structure", "area": "Sangli", "deg": 3, "label": true}, {"id": "smr_mid", "name": "Sangli-Miraj Rd (mid)", "lat": 16.849, "lon": 74.5915, "x": 71.38920796163431, "y": 16.849, "type": "junction", "role": "structure", "area": "Vishrambag", "deg": 3, "label": false}, {"id": "smr_south", "name": "Sangli-Miraj Rd (south)", "lat": 16.838, "lon": 74.614, "x": 71.41074201282161, "y": 16.838, "type": "junction", "role": "structure", "area": "Vishrambag", "deg": 6, "label": true}, {"id": "kupwad_link", "name": "Kupwad Link Road", "lat": 16.856, "lon": 74.618, "x": 71.41457028858824, "y": 16.856, "type": "junction", "role": "structure", "area": "Kupwad", "deg": 3, "label": false}, {"id": "vishrambag_chowk", "name": "Vishrambag Chowk", "lat": 16.847, "lon": 74.5985, "x": 71.39590744422593, "y": 16.847, "type": "junction", "role": "structure", "area": "Vishrambag", "deg": 8, "label": true}, {"id": "dhamani_road", "name": "Dhamani Road", "lat": 16.8498, "lon": 74.5952, "x": 71.39274911671846, "y": 16.8498, "type": "junction", "role": "structure", "area": "Vishrambag", "deg": 6, "label": true}, {"id": "college_corner", "name": "College Corner", "lat": 16.8442, "lon": 74.5975, "x": 71.39495037528427, "y": 16.8442, "type": "junction", "role": "structure", "area": "Vishrambag", "deg": 5, "label": false}, {"id": "campus_gate_north", "name": "Campus North Gate", "lat": 16.848, "lon": 74.602, "x": 71.39925718552173, "y": 16.848, "type": "junction", "role": "structure", "area": "Vishrambag", "deg": 4, "label": false}, {"id": "campus_inner", "name": "Campus Inner Road", "lat": 16.845, "lon": 74.6025, "x": 71.39973571999256, "y": 16.845, "type": "junction", "role": "structure", "area": "Vishrambag", "deg": 4, "label": false}, {"id": "vishrambag_east", "name": "Vishrambag East", "lat": 16.8462, "lon": 74.607, "x": 71.40404253023002, "y": 16.8462, "type": "junction", "role": "structure", "area": "Vishrambag", "deg": 4, "label": false}, {"id": "vishrambag_south", "name": "Vishrambag South", "lat": 16.842, "lon": 74.599, "x": 71.39638597869676, "y": 16.842, "type": "junction", "role": "structure", "area": "Vishrambag", "deg": 3, "label": false}, {"id": "walchand_gate", "name": "Walchand College Main Gate", "lat": 16.8456, "lon": 74.6016, "x": 71.39887435794506, "y": 16.8456, "type": "landmark", "role": "structure", "area": "Vishrambag", "deg": 6, "label": true}, {"id": "wce_academic", "name": "WCE Academic Block", "lat": 16.8452, "lon": 74.6002, "x": 71.39753446142674, "y": 16.8452, "type": "landmark", "role": "structure", "area": "Vishrambag", "deg": 5, "label": false}, {"id": "willingdon_college", "name": "Willingdon College", "lat": 16.8448, "lon": 74.5995, "x": 71.39686451316759, "y": 16.8448, "type": "landmark", "role": "structure", "area": "Vishrambag", "deg": 2, "label": true}, {"id": "wce_hostel_a", "name": "WCE Hostel Block A", "lat": 16.8443, "lon": 74.6035, "x": 71.40069278893421, "y": 16.8443, "type": "hostel", "role": "dropoff", "area": "Vishrambag", "deg": 3, "label": false}, {"id": "wce_hostel_b", "name": "WCE Hostel Block B", "lat": 16.8437, "lon": 74.6045, "x": 71.40164985787587, "y": 16.8437, "type": "hostel", "role": "dropoff", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "wce_hostel_c", "name": "WCE Hostel Block C", "lat": 16.8432, "lon": 74.603, "x": 71.40021425446338, "y": 16.8432, "type": "hostel", "role": "dropoff", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "wce_hostel_girls", "name": "WCE Girls Hostel", "lat": 16.8465, "lon": 74.6042, "x": 71.40136273719338, "y": 16.8465, "type": "hostel", "role": "dropoff", "area": "Vishrambag", "deg": 3, "label": true}, {"id": "wce_staff_qtrs", "name": "WCE Staff Quarters", "lat": 16.847, "lon": 74.6055, "x": 71.40260692681753, "y": 16.847, "type": "customer_area", "role": "dropoff", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "government_colony", "name": "Government Colony", "lat": 16.8478, "lon": 74.6062, "x": 71.40327687507668, "y": 16.8478, "type": "customer_area", "role": "dropoff", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "vishrambag_res", "name": "Vishrambag Residential", "lat": 16.8432, "lon": 74.5948, "x": 71.3923662891418, "y": 16.8432, "type": "customer_area", "role": "dropoff", "area": "Vishrambag", "deg": 3, "label": false}, {"id": "vishrambag_society", "name": "Vishrambag Housing Society", "lat": 16.8412, "lon": 74.5965, "x": 71.39399330634262, "y": 16.8412, "type": "customer_area", "role": "dropoff", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "willingdon_hostel", "name": "Willingdon Hostel", "lat": 16.8438, "lon": 74.5962, "x": 71.39370618566011, "y": 16.8438, "type": "customer_area", "role": "dropoff", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "rest_food_lab", "name": "Food Lab", "lat": 16.8475, "lon": 74.5972, "x": 71.39466325460177, "y": 16.8475, "type": "restaurant", "role": "pickup", "area": "Vishrambag", "deg": 3, "label": false}, {"id": "rest_world_foodies", "name": "World of Foodies", "lat": 16.8462, "lon": 74.596, "x": 71.39351477187178, "y": 16.8462, "type": "restaurant", "role": "pickup", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "rest_chowk_cafe", "name": "Vishrambag Chowk Cafe", "lat": 16.8478, "lon": 74.5992, "x": 71.39657739248509, "y": 16.8478, "type": "restaurant", "role": "pickup", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "rest_vishram", "name": "Hotel Vishram", "lat": 16.8466, "lon": 74.5998, "x": 71.39715163385009, "y": 16.8466, "type": "restaurant", "role": "pickup", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "rest_campus_corner", "name": "Campus Corner Snacks", "lat": 16.8448, "lon": 74.6008, "x": 71.39810870279175, "y": 16.8448, "type": "restaurant", "role": "pickup", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "rest_belge_bistro", "name": "Belge Bistro", "lat": 16.8488, "lon": 74.594, "x": 71.39160063398846, "y": 16.8488, "type": "restaurant", "role": "pickup", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "rest_dhamani", "name": "Dhamani Road Restaurant", "lat": 16.8505, "lon": 74.5935, "x": 71.39112209951764, "y": 16.8505, "type": "restaurant", "role": "pickup", "area": "Vishrambag", "deg": 2, "label": false}, {"id": "miraj_junction", "name": "Miraj Junction", "lat": 16.8215, "lon": 74.639, "x": 71.43466873636304, "y": 16.8215, "type": "landmark", "role": "structure", "area": "Miraj", "deg": 5, "label": true}, {"id": "miraj_chowk", "name": "Miraj Chowk", "lat": 16.82, "lon": 74.642, "x": 71.43753994318801, "y": 16.82, "type": "junction", "role": "structure", "area": "Miraj", "deg": 3, "label": false}, {"id": "miraj_bus_stand", "name": "Miraj Bus Stand", "lat": 16.818, "lon": 74.6435, "x": 71.4389755466005, "y": 16.818, "type": "junction", "role": "structure", "area": "Miraj", "deg": 3, "label": true}, {"id": "miraj_medical", "name": "Miraj Medical College", "lat": 16.8232, "lon": 74.636, "x": 71.43179752953807, "y": 16.8232, "type": "landmark", "role": "structure", "area": "Miraj", "deg": 3, "label": false}, {"id": "miraj_res", "name": "Miraj Residential", "lat": 16.815, "lon": 74.647, "x": 71.44232528789631, "y": 16.815, "type": "customer_area", "role": "dropoff", "area": "Miraj", "deg": 2, "label": false}, {"id": "miraj_wanless", "name": "Wanless Colony", "lat": 16.8245, "lon": 74.641, "x": 71.43658287424637, "y": 16.8245, "type": "customer_area", "role": "dropoff", "area": "Miraj", "deg": 2, "label": false}, {"id": "miraj_station_area", "name": "Miraj Station Area", "lat": 16.8225, "lon": 74.6445, "x": 71.43993261554216, "y": 16.8225, "type": "customer_area", "role": "dropoff", "area": "Miraj", "deg": 2, "label": false}, {"id": "rest_miraj_station", "name": "Miraj Station Restaurant", "lat": 16.821, "lon": 74.6412, "x": 71.4367742880347, "y": 16.821, "type": "restaurant", "role": "pickup", "area": "Miraj", "deg": 2, "label": false}, {"id": "rest_miraj_bus", "name": "Bus Stand Eatery", "lat": 16.8188, "lon": 74.6428, "x": 71.43830559834134, "y": 16.8188, "type": "restaurant", "role": "pickup", "area": "Miraj", "deg": 2, "label": false}, {"id": "rest_miraj_medical", "name": "Medical College Canteen", "lat": 16.8238, "lon": 74.6378, "x": 71.43352025363306, "y": 16.8238, "type": "restaurant", "role": "pickup", "area": "Miraj", "deg": 2, "label": false}, {"id": "kupwad_junction", "name": "Kupwad Road Junction", "lat": 16.865, "lon": 74.625, "x": 71.42126977117985, "y": 16.865, "type": "junction", "role": "structure", "area": "Kupwad", "deg": 4, "label": true}, {"id": "kupwad_gaon", "name": "Kupwad Gaon", "lat": 16.8758, "lon": 74.644, "x": 71.43945408107133, "y": 16.8758, "type": "customer_area", "role": "dropoff", "area": "Kupwad", "deg": 2, "label": false}, {"id": "kupwad_housing", "name": "Kupwad Housing Colony", "lat": 16.878, "lon": 74.648, "x": 71.44328235683795, "y": 16.878, "type": "customer_area", "role": "dropoff", "area": "Kupwad", "deg": 3, "label": false}, {"id": "kupwad_midc", "name": "Kupwad MIDC", "lat": 16.8806, "lon": 74.6511, "x": 71.4462492705571, "y": 16.8806, "type": "customer_area", "role": "dropoff", "area": "Kupwad", "deg": 3, "label": true}, {"id": "rest_kupwad", "name": "MIDC Canteen", "lat": 16.879, "lon": 74.6495, "x": 71.44471796025046, "y": 16.879, "type": "restaurant", "role": "pickup", "area": "Kupwad", "deg": 2, "label": false}, {"id": "madhavnagar_road", "name": "Madhavnagar Road", "lat": 16.879, "lon": 74.58, "x": 71.37820166880526, "y": 16.879, "type": "junction", "role": "structure", "area": "Madhavnagar", "deg": 3, "label": false}, {"id": "madhavnagar_res", "name": "Madhavnagar Residential", "lat": 16.889, "lon": 74.585, "x": 71.38298701351354, "y": 16.889, "type": "customer_area", "role": "dropoff", "area": "Madhavnagar", "deg": 3, "label": false}, {"id": "madhavnagar", "name": "Madhavnagar", "lat": 16.8922, "lon": 74.5881, "x": 71.38595392723269, "y": 16.8922, "type": "customer_area", "role": "dropoff", "area": "Madhavnagar", "deg": 3, "label": true}, {"id": "rest_madhavnagar", "name": "Madhavnagar Hotel", "lat": 16.8905, "lon": 74.5868, "x": 71.38470973760853, "y": 16.8905, "type": "restaurant", "role": "pickup", "area": "Madhavnagar", "deg": 2, "label": false}, {"id": "ashta_road", "name": "Sangli-Ashta Road", "lat": 16.864, "lon": 74.542, "x": 71.34183304902228, "y": 16.864, "type": "junction", "role": "structure", "area": "Sangli", "deg": 3, "label": true}, {"id": "budhgaon_college", "name": "Budhgaon College Area", "lat": 16.8685, "lon": 74.5185, "x": 71.31934192889334, "y": 16.8685, "type": "customer_area", "role": "dropoff", "area": "Budhgaon", "deg": 2, "label": false}, {"id": "budhgaon", "name": "Budhgaon", "lat": 16.87, "lon": 74.515, "x": 71.31599218759753, "y": 16.87, "type": "customer_area", "role": "dropoff", "area": "Budhgaon", "deg": 1, "label": true}], "edges": [{"u": "sangli_st_stand", "v": "station_road", "km": 0.408, "type": "main", "kmph": 30.0, "name": "Station Road"}, {"u": "station_road", "v": "sangli_railway_stn", "km": 0.58, "type": "main", "kmph": 30.0, "name": "Station Road"}, {"u": "station_road", "v": "rest_station_rd", "km": 0.135, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_station_rd", "v": "balaji_nagar", "km": 1.212, "type": "local", "kmph": 20.0, "name": ""}, {"u": "sangli_railway_stn", "v": "civil_hospital", "km": 0.729, "type": "main", "kmph": 30.0, "name": ""}, {"u": "civil_hospital", "v": "balaji_nagar", "km": 0.48, "type": "local", "kmph": 20.0, "name": ""}, {"u": "balaji_nagar", "v": "shivaji_nagar", "km": 0.788, "type": "local", "kmph": 20.0, "name": ""}, {"u": "shivaji_nagar", "v": "timber_area", "km": 0.98, "type": "local", "kmph": 20.0, "name": ""}, {"u": "timber_area", "v": "timber_area_res", "km": 0.306, "type": "local", "kmph": 20.0, "name": ""}, {"u": "timber_area_res", "v": "station_road", "km": 0.84, "type": "local", "kmph": 20.0, "name": ""}, {"u": "timber_area", "v": "sangli_st_stand", "km": 0.742, "type": "local", "kmph": 20.0, "name": ""}, {"u": "sangli_st_stand", "v": "harbhat_road", "km": 0.472, "type": "main", "kmph": 30.0, "name": "Harbhat Road"}, {"u": "harbhat_road", "v": "rest_harbhat", "km": 0.118, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_harbhat", "v": "gaon_bhag", "km": 0.574, "type": "local", "kmph": 20.0, "name": ""}, {"u": "gaon_bhag", "v": "rest_gaon_bhag", "km": 0.191, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_gaon_bhag", "v": "rajwada", "km": 0.654, "type": "local", "kmph": 20.0, "name": ""}, {"u": "harbhat_road", "v": "rajwada", "km": 0.515, "type": "main", "kmph": 30.0, "name": "Harbhat Road"}, {"u": "gaon_bhag", "v": "khanbhag", "km": 0.625, "type": "local", "kmph": 20.0, "name": ""}, {"u": "sangli_st_stand", "v": "khanbhag", "km": 0.942, "type": "main", "kmph": 30.0, "name": ""}, {"u": "khanbhag", "v": "market_yard", "km": 0.66, "type": "main", "kmph": 30.0, "name": "Market Yard Road"}, {"u": "khanbhag", "v": "rest_market_yard", "km": 0.463, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_market_yard", "v": "market_yard", "km": 0.282, "type": "local", "kmph": 20.0, "name": ""}, {"u": "market_yard", "v": "sangli_railway_stn", "km": 2.09, "type": "main", "kmph": 30.0, "name": "Market Yard Road"}, {"u": "rajwada", "v": "rest_rajwada", "km": 0.211, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_rajwada", "v": "rajwada_peth", "km": 0.6, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rajwada_peth", "v": "ganapati_mandir", "km": 0.272, "type": "local", "kmph": 20.0, "name": ""}, {"u": "ganapati_mandir", "v": "rajwada", "km": 0.508, "type": "local", "kmph": 20.0, "name": ""}, {"u": "ganapati_mandir", "v": "irwin_bridge", "km": 0.734, "type": "main", "kmph": 30.0, "name": "Ganapati Mandir Road"}, {"u": "irwin_bridge", "v": "amrai_garden", "km": 0.448, "type": "local", "kmph": 20.0, "name": ""}, {"u": "amrai_garden", "v": "rest_amrai", "km": 0.23, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_amrai", "v": "sangli_south_jn", "km": 1.291, "type": "local", "kmph": 20.0, "name": ""}, {"u": "sangli_south_jn", "v": "ganapati_mandir", "km": 0.81, "type": "local", "kmph": 20.0, "name": ""}, {"u": "sangli_south_jn", "v": "shivaji_nagar", "km": 1.152, "type": "main", "kmph": 30.0, "name": ""}, {"u": "sangli_south_jn", "v": "south_bridge", "km": 1.231, "type": "main", "kmph": 30.0, "name": ""}, {"u": "amrai_garden", "v": "rajwada", "km": 1.305, "type": "local", "kmph": 20.0, "name": ""}, {"u": "irwin_bridge", "v": "sangliwadi", "km": 1.112, "type": "bridge", "kmph": 25.0, "name": "Irwin Bridge"}, {"u": "south_bridge", "v": "sangliwadi_east", "km": 1.289, "type": "bridge", "kmph": 25.0, "name": "Sangli South Bridge"}, {"u": "sangliwadi_east", "v": "sangliwadi", "km": 0.877, "type": "local", "kmph": 20.0, "name": ""}, {"u": "sangli_st_stand", "v": "smr_north", "km": 2.171, "type": "arterial", "kmph": 40.0, "name": "Sangli-Miraj Road"}, {"u": "shivaji_nagar", "v": "smr_north", "km": 1.157, "type": "arterial", "kmph": 40.0, "name": "Sangli-Miraj Road"}, {"u": "smr_north", "v": "smr_mid", "km": 0.872, "type": "arterial", "kmph": 40.0, "name": "Sangli-Miraj Road"}, {"u": "smr_mid", "v": "dhamani_road", "km": 0.525, "type": "main", "kmph": 30.0, "name": "Dhamani Road"}, {"u": "smr_mid", "v": "vishrambag_chowk", "km": 0.933, "type": "arterial", "kmph": 40.0, "name": "Sangli-Miraj Road"}, {"u": "vishrambag_chowk", "v": "smr_south", "km": 2.315, "type": "arterial", "kmph": 40.0, "name": "Sangli-Miraj Road"}, {"u": "walchand_gate", "v": "smr_south", "km": 1.88, "type": "arterial", "kmph": 40.0, "name": "Sangli-Miraj Road"}, {"u": "smr_south", "v": "miraj_junction", "km": 3.878, "type": "arterial", "kmph": 40.0, "name": "Sangli-Miraj Road"}, {"u": "smr_south", "v": "miraj_medical", "km": 3.721, "type": "main", "kmph": 30.0, "name": ""}, {"u": "smr_south", "v": "kupwad_junction", "km": 4.189, "type": "main", "kmph": 30.0, "name": "Kupwad Road"}, {"u": "vishrambag_east", "v": "kupwad_link", "km": 2.079, "type": "main", "kmph": 30.0, "name": "Kupwad Link Road"}, {"u": "kupwad_link", "v": "kupwad_junction", "km": 1.622, "type": "main", "kmph": 30.0, "name": "Kupwad Link Road"}, {"u": "kupwad_link", "v": "smr_south", "km": 2.66, "type": "main", "kmph": 30.0, "name": ""}, {"u": "dhamani_road", "v": "vishrambag_chowk", "km": 0.61, "type": "main", "kmph": 30.0, "name": "Dhamani Road"}, {"u": "vishrambag_chowk", "v": "campus_gate_north", "km": 0.505, "type": "main", "kmph": 30.0, "name": ""}, {"u": "campus_gate_north", "v": "walchand_gate", "km": 0.351, "type": "main", "kmph": 30.0, "name": ""}, {"u": "campus_gate_north", "v": "vishrambag_east", "km": 0.739, "type": "main", "kmph": 30.0, "name": ""}, {"u": "vishrambag_east", "v": "walchand_gate", "km": 0.839, "type": "local", "kmph": 20.0, "name": ""}, {"u": "vishrambag_chowk", "v": "college_corner", "km": 0.477, "type": "local", "kmph": 20.0, "name": ""}, {"u": "college_corner", "v": "vishrambag_south", "km": 0.424, "type": "local", "kmph": 20.0, "name": ""}, {"u": "vishrambag_south", "v": "vishrambag_chowk", "km": 0.81, "type": "local", "kmph": 20.0, "name": ""}, {"u": "walchand_gate", "v": "wce_academic", "km": 0.225, "type": "local", "kmph": 20.0, "name": "Campus Road"}, {"u": "wce_academic", "v": "campus_inner", "km": 0.356, "type": "local", "kmph": 20.0, "name": "Campus Road"}, {"u": "campus_inner", "v": "wce_hostel_a", "km": 0.191, "type": "local", "kmph": 20.0, "name": "Campus Road"}, {"u": "wce_hostel_a", "v": "wce_hostel_b", "km": 0.182, "type": "local", "kmph": 20.0, "name": "Campus Road"}, {"u": "wce_hostel_b", "v": "wce_hostel_c", "km": 0.245, "type": "local", "kmph": 20.0, "name": "Campus Road"}, {"u": "wce_hostel_c", "v": "campus_inner", "km": 0.3, "type": "local", "kmph": 20.0, "name": "Campus Road"}, {"u": "wce_hostel_a", "v": "wce_hostel_girls", "km": 0.371, "type": "local", "kmph": 20.0, "name": "Campus Road"}, {"u": "wce_hostel_girls", "v": "campus_gate_north", "km": 0.417, "type": "local", "kmph": 20.0, "name": ""}, {"u": "wce_hostel_girls", "v": "wce_staff_qtrs", "km": 0.216, "type": "local", "kmph": 20.0, "name": ""}, {"u": "wce_staff_qtrs", "v": "government_colony", "km": 0.168, "type": "local", "kmph": 20.0, "name": ""}, {"u": "government_colony", "v": "vishrambag_east", "km": 0.256, "type": "main", "kmph": 30.0, "name": ""}, {"u": "wce_academic", "v": "willingdon_college", "km": 0.126, "type": "local", "kmph": 20.0, "name": ""}, {"u": "willingdon_college", "v": "college_corner", "km": 0.323, "type": "local", "kmph": 20.0, "name": ""}, {"u": "walchand_gate", "v": "campus_inner", "km": 0.169, "type": "local", "kmph": 20.0, "name": "Campus Road"}, {"u": "college_corner", "v": "willingdon_hostel", "km": 0.211, "type": "local", "kmph": 20.0, "name": ""}, {"u": "willingdon_hostel", "v": "vishrambag_res", "km": 0.237, "type": "local", "kmph": 20.0, "name": ""}, {"u": "vishrambag_res", "v": "vishrambag_society", "km": 0.416, "type": "local", "kmph": 20.0, "name": ""}, {"u": "vishrambag_society", "v": "vishrambag_south", "km": 0.407, "type": "local", "kmph": 20.0, "name": ""}, {"u": "vishrambag_res", "v": "dhamani_road", "km": 1.066, "type": "local", "kmph": 20.0, "name": ""}, {"u": "vishrambag_chowk", "v": "rest_chowk_cafe", "km": 0.168, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_chowk_cafe", "v": "rest_food_lab", "km": 0.312, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_food_lab", "v": "rest_world_foodies", "km": 0.28, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_world_foodies", "v": "college_corner", "km": 0.397, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_food_lab", "v": "dhamani_road", "km": 0.482, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_vishram", "v": "vishrambag_chowk", "km": 0.211, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_vishram", "v": "wce_academic", "km": 0.234, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_campus_corner", "v": "wce_academic", "km": 0.113, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_campus_corner", "v": "walchand_gate", "km": 0.179, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_belge_bistro", "v": "dhamani_road", "km": 0.246, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_belge_bistro", "v": "rest_dhamani", "km": 0.285, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_dhamani", "v": "dhamani_road", "km": 0.286, "type": "local", "kmph": 20.0, "name": ""}, {"u": "miraj_junction", "v": "miraj_chowk", "km": 0.468, "type": "main", "kmph": 30.0, "name": ""}, {"u": "miraj_chowk", "v": "miraj_bus_stand", "km": 0.356, "type": "main", "kmph": 30.0, "name": ""}, {"u": "miraj_bus_stand", "v": "miraj_res", "km": 0.725, "type": "local", "kmph": 20.0, "name": ""}, {"u": "miraj_chowk", "v": "rest_miraj_station", "km": 0.203, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_miraj_station", "v": "miraj_station_area", "km": 0.564, "type": "local", "kmph": 20.0, "name": ""}, {"u": "miraj_station_area", "v": "miraj_junction", "km": 0.864, "type": "local", "kmph": 20.0, "name": ""}, {"u": "miraj_bus_stand", "v": "rest_miraj_bus", "km": 0.168, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_miraj_bus", "v": "miraj_res", "km": 0.892, "type": "local", "kmph": 20.0, "name": ""}, {"u": "miraj_junction", "v": "miraj_medical", "km": 0.482, "type": "main", "kmph": 30.0, "name": ""}, {"u": "miraj_medical", "v": "rest_miraj_medical", "km": 0.294, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_miraj_medical", "v": "miraj_wanless", "km": 0.507, "type": "local", "kmph": 20.0, "name": ""}, {"u": "miraj_wanless", "v": "miraj_junction", "km": 0.574, "type": "local", "kmph": 20.0, "name": ""}, {"u": "kupwad_junction", "v": "kupwad_gaon", "km": 3.057, "type": "main", "kmph": 30.0, "name": "Kupwad Road"}, {"u": "kupwad_gaon", "v": "kupwad_housing", "km": 0.638, "type": "main", "kmph": 30.0, "name": ""}, {"u": "kupwad_housing", "v": "kupwad_midc", "km": 0.57, "type": "main", "kmph": 30.0, "name": "MIDC Road"}, {"u": "kupwad_midc", "v": "rest_kupwad", "km": 0.357, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_kupwad", "v": "kupwad_housing", "km": 0.282, "type": "local", "kmph": 20.0, "name": ""}, {"u": "kupwad_junction", "v": "madhavnagar_road", "km": 6.546, "type": "main", "kmph": 30.0, "name": ""}, {"u": "madhavnagar_road", "v": "madhavnagar_res", "km": 1.602, "type": "main", "kmph": 30.0, "name": "Madhavnagar Road"}, {"u": "madhavnagar_res", "v": "madhavnagar", "km": 0.631, "type": "main", "kmph": 30.0, "name": "Madhavnagar Road"}, {"u": "madhavnagar", "v": "rest_madhavnagar", "km": 0.34, "type": "local", "kmph": 20.0, "name": ""}, {"u": "rest_madhavnagar", "v": "madhavnagar_res", "km": 0.368, "type": "local", "kmph": 20.0, "name": ""}, {"u": "madhavnagar_road", "v": "market_yard", "km": 3.705, "type": "main", "kmph": 30.0, "name": "Madhavnagar Road"}, {"u": "madhavnagar", "v": "kupwad_midc", "km": 8.874, "type": "main", "kmph": 30.0, "name": ""}, {"u": "market_yard", "v": "ashta_road", "km": 2.431, "type": "main", "kmph": 30.0, "name": "Sangli-Ashta Road"}, {"u": "amrai_garden", "v": "ashta_road", "km": 3.516, "type": "main", "kmph": 30.0, "name": ""}, {"u": "ashta_road", "v": "budhgaon_college", "km": 2.933, "type": "highway", "kmph": 60.0, "name": "Sangli-Islampur Road"}, {"u": "budhgaon_college", "v": "budhgaon", "km": 0.531, "type": "main", "kmph": 30.0, "name": ""}], "bounds": {"minx": 71.31599218759753, "maxx": 71.4462492705571, "miny": 16.815, "maxy": 16.8922}, "totalKm": 111.2};
+
+const ROAD_STYLE = {
+  local:    { w: 1.1, c: 'var(--road-1)', dash: '' },
+  main:     { w: 1.8, c: 'var(--road-2)', dash: '' },
+  arterial: { w: 3.0, c: 'var(--road-3)', dash: '' },
+  highway:  { w: 3.6, c: 'var(--road-4)', dash: '' },
+  bridge:   { w: 2.6, c: 'var(--road-4)', dash: '6 4' },
+};
+
+const byId = {};
+DATA.nodes.forEach(n => byId[n.id] = n);
+
+const svg  = document.getElementById('svg');
+const tip  = document.getElementById('tip');
+const NS   = 'http://www.w3.org/2000/svg';
+
+const hiddenRoles = new Set();
+const hiddenRoads = new Set();
+let allLabels = false;
+
+// ---- projection -----------------------------------------------------------
+const PAD = 46;
+let W = 1100, H = 600, view = { x: 0, y: 0, k: 1 };
+
+function project() {
+  const b = DATA.bounds;
+  const sx = (W - PAD * 2) / (b.maxx - b.minx);
+  const sy = (H - PAD * 2) / (b.maxy - b.miny);
+  const s  = Math.min(sx, sy);
+  const ox = PAD + ((W - PAD * 2) - (b.maxx - b.minx) * s) / 2;
+  const oy = PAD + ((H - PAD * 2) - (b.maxy - b.miny) * s) / 2;
+  DATA.nodes.forEach(n => {
+    n.px = ox + (n.x - b.minx) * s;
+    n.py = H - (oy + (n.y - b.miny) * s);   // flip: latitude grows upward
+  });
+}
+
+// ---- drawing --------------------------------------------------------------
+let gRoot;
+
+function draw() {
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  gRoot = document.createElementNS(NS, 'g');
+  gRoot.setAttribute('transform',
+    `translate(${view.x} ${view.y}) scale(${view.k})`);
+  svg.appendChild(gRoot);
+
+  const gRoads = document.createElementNS(NS, 'g');
+  const gNodes = document.createElementNS(NS, 'g');
+  gRoot.appendChild(gRoads);
+  gRoot.appendChild(gNodes);
+
+  // roads
+  DATA.edges.forEach(e => {
+    if (hiddenRoads.has(e.type)) return;
+    const a = byId[e.u], b = byId[e.v];
+    const st = ROAD_STYLE[e.type];
+    const ln = document.createElementNS(NS, 'line');
+    ln.setAttribute('class', 'road');
+    ln.setAttribute('x1', a.px); ln.setAttribute('y1', a.py);
+    ln.setAttribute('x2', b.px); ln.setAttribute('y2', b.py);
+    ln.setAttribute('stroke', st.c);
+    ln.setAttribute('stroke-width', st.w / view.k);   // constant on screen
+    if (st.dash) ln.setAttribute('stroke-dasharray', st.dash);
+    ln.style.pointerEvents = 'stroke';
+    ln.addEventListener('mousemove', ev => showTip(ev,
+      `<b>${e.name || 'unnamed road'}</b><br>` +
+      `<span class="k">${a.name} &rarr; ${b.name}</span><br>` +
+      `${e.km.toFixed(2)} km &middot; ${e.type} &middot; ${e.kmph} km/h clear`));
+    ln.addEventListener('mouseleave', hideTip);
+    gRoads.appendChild(ln);
+  });
+
+  // nodes
+  DATA.nodes.forEach(n => {
+    if (hiddenRoles.has(n.role)) return;
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'nodeg');
+
+    // counter-scale by the full zoom factor so marks and labels keep a
+    // constant SCREEN size. zooming should reveal detail, not magnify text.
+    const s = 1 / view.k;
+    let shape;
+    if (n.type === 'restaurant') {
+      shape = document.createElementNS(NS, 'rect');
+      const r = 4.2 * s;
+      shape.setAttribute('x', n.px - r); shape.setAttribute('y', n.py - r);
+      shape.setAttribute('width', r * 2); shape.setAttribute('height', r * 2);
+      shape.setAttribute('fill', 'var(--pickup)');
+    } else if (n.type === 'hostel') {
+      shape = document.createElementNS(NS, 'polygon');
+      const r = 6 * s;
+      shape.setAttribute('points',
+        `${n.px},${n.py - r} ${n.px + r * 0.9},${n.py + r * 0.7} ${n.px - r * 0.9},${n.py + r * 0.7}`);
+      shape.setAttribute('fill', 'var(--dropoff)');
+    } else if (n.type === 'customer_area') {
+      shape = document.createElementNS(NS, 'circle');
+      shape.setAttribute('cx', n.px); shape.setAttribute('cy', n.py);
+      shape.setAttribute('r', 4.4 * s);
+      shape.setAttribute('fill', 'var(--dropoff)');
+    } else if (n.type === 'landmark') {
+      shape = document.createElementNS(NS, 'circle');
+      shape.setAttribute('cx', n.px); shape.setAttribute('cy', n.py);
+      shape.setAttribute('r', 3.6 * s);
+      shape.setAttribute('fill', 'none');
+      shape.setAttribute('stroke', 'var(--muted)');
+      shape.setAttribute('stroke-width', 1.6 * s);
+    } else {
+      shape = document.createElementNS(NS, 'circle');
+      shape.setAttribute('cx', n.px); shape.setAttribute('cy', n.py);
+      shape.setAttribute('r', 2.2 * s);
+      shape.setAttribute('fill', 'var(--muted)');
+    }
+    // 2px surface ring so overlapping marks stay separable
+    if (n.type !== 'landmark' && n.type !== 'junction') {
+      shape.setAttribute('stroke', 'var(--surface-1)');
+      shape.setAttribute('stroke-width', 1.6 * s);
+    }
+    g.appendChild(shape);
+
+    // generous invisible hit target
+    const hit = document.createElementNS(NS, 'circle');
+    hit.setAttribute('cx', n.px); hit.setAttribute('cy', n.py);
+    hit.setAttribute('r', 11 * s);
+    hit.setAttribute('fill', 'transparent');
+    g.appendChild(hit);
+
+    if (n.label || allLabels) {
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', n.px + 7 * s);
+      t.setAttribute('y', n.py - 5 * s);
+      t.style.fontSize = (8.5 * s) + 'px';      // .style beats the stylesheet
+      t.style.strokeWidth = (2.5 * s) + 'px';
+      t.textContent = n.name;
+      g.appendChild(t);
+    }
+
+    g.addEventListener('mousemove', ev => showTip(ev,
+      `<b>${n.name}</b><br>` +
+      `<span class="k">${n.type.replace('_', ' ')} &middot; ${n.area}</span><br>` +
+      `${n.deg} road${n.deg === 1 ? '' : 's'} &middot; ${n.lat.toFixed(4)}, ${n.lon.toFixed(4)}`));
+    g.addEventListener('mouseleave', hideTip);
+    g.addEventListener('click', () => highlight(n.id));
+    gNodes.appendChild(g);
+  });
+}
+
+// clicking a node thickens its roads, so you can see what connects where
+let hot = null;
+function highlight(id) {
+  hot = (hot === id) ? null : id;
+  draw();
+  if (!hot) return;
+  [...gRoot.querySelectorAll('.road')].forEach((ln, i) => {
+    const e = DATA.edges.filter(e => !hiddenRoads.has(e.type))[i];
+    if (e && (e.u === hot || e.v === hot)) {
+      ln.classList.add('hot');
+      ln.setAttribute('stroke-width', 3.4 / view.k);
+    }
+  });
+}
+
+// ---- tooltip --------------------------------------------------------------
+function showTip(ev, html) {
+  tip.innerHTML = html;
+  tip.style.opacity = 1;
+  const r = tip.getBoundingClientRect();
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - 14;
+  tip.style.left = x + 'px';
+  tip.style.top = y + 'px';
+}
+function hideTip() { tip.style.opacity = 0; }
+
+// ---- pan & zoom -----------------------------------------------------------
+let dragging = false, last = null;
+svg.addEventListener('pointerdown', e => {
+  dragging = true; last = [e.clientX, e.clientY];
+  svg.classList.add('drag'); svg.setPointerCapture(e.pointerId);
+});
+svg.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const sc = W / svg.getBoundingClientRect().width;
+  view.x += (e.clientX - last[0]) * sc;
+  view.y += (e.clientY - last[1]) * sc;
+  last = [e.clientX, e.clientY];
+  gRoot.setAttribute('transform',
+    `translate(${view.x} ${view.y}) scale(${view.k})`);
+});
+svg.addEventListener('pointerup', e => {
+  dragging = false; svg.classList.remove('drag');
+});
+svg.addEventListener('wheel', e => {
+  e.preventDefault();
+  const box = svg.getBoundingClientRect();
+  const sc = W / box.width;
+  const mx = (e.clientX - box.left) * sc, my = (e.clientY - box.top) * sc;
+  const f  = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+  const k2 = Math.min(14, Math.max(0.6, view.k * f));
+  view.x = mx - (mx - view.x) * (k2 / view.k);
+  view.y = my - (my - view.y) * (k2 / view.k);
+  view.k = k2;
+  draw();
+}, { passive: false });
+
+// ---- controls -------------------------------------------------------------
+document.querySelectorAll('#filters .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const role = chip.dataset.role, road = chip.dataset.road;
+    if (role) hiddenRoles.has(role) ? hiddenRoles.delete(role) : hiddenRoles.add(role);
+    if (road) hiddenRoads.has(road) ? hiddenRoads.delete(road) : hiddenRoads.add(road);
+    chip.classList.toggle('off');
+    draw(); stats();
+  });
+});
+
+document.getElementById('reset').onclick = () => {
+  view = { x: 0, y: 0, k: 1 }; hot = null; draw();
+};
+document.getElementById('labels').onclick = e => {
+  allLabels = !allLabels;
+  e.target.textContent = allLabels ? 'labels: all' : 'labels: key only';
+  draw();
+};
+document.getElementById('view').onclick = e => {
+  const t = document.getElementById('tableview');
+  const m = document.getElementById('mapview');
+  const showTable = t.classList.contains('hidden');
+  t.classList.toggle('hidden', !showTable);
+  m.classList.toggle('hidden', showTable);
+  e.target.textContent = showTable ? 'map view' : 'table view';
+};
+document.getElementById('theme').onclick = e => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+  e.target.textContent = dark ? 'dark' : 'light';
+  draw();
+};
+
+// ---- stats ----------------------------------------------------------------
+function stats() {
+  const ns = DATA.nodes.filter(n => !hiddenRoles.has(n.role));
+  const es = DATA.edges.filter(e => !hiddenRoads.has(e.type));
+  const km = es.reduce((a, e) => a + e.km, 0);
+  const deg = ns.length ? (2 * es.length / ns.length) : 0;
+  const dens = ns.length > 1
+    ? (es.length / (ns.length * (ns.length - 1) / 2) * 100) : 0;
+  document.getElementById('stats').innerHTML = `
+    <div><b>${ns.length}</b>nodes shown</div>
+    <div><b>${es.length}</b>roads shown</div>
+    <div><b>${km.toFixed(1)}</b>km of road</div>
+    <div><b>${deg.toFixed(2)}</b>average degree</div>
+    <div><b>${dens.toFixed(1)}%</b>density &mdash; why we use an adjacency list</div>`;
+}
+
+// ---- table view (the relief for the sub-3:1 contrast case) -----------------
+function table() {
+  const rows = DATA.edges.map(e => `
+    <tr>
+      <td>${byId[e.u].name}</td>
+      <td>${byId[e.v].name}</td>
+      <td class="num">${e.km.toFixed(2)}</td>
+      <td>${e.type}</td>
+      <td class="num">${e.kmph}</td>
+      <td>${e.name || '&mdash;'}</td>
+    </tr>`).join('');
+  document.getElementById('tbl').innerHTML =
+    `<thead><tr><th>from</th><th>to</th><th>km</th><th>road type</th>
+     <th>clear km/h</th><th>road name</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+project(); draw(); stats(); table();
+window.addEventListener('resize', () => { draw(); });
+</script>
+</body>
+</html>

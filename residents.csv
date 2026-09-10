@@ -1,0 +1,156 @@
+id,name,locality,city_zone,latitude,longitude,type
+1,Jawahar Cooperative Housing Society,Vishrambag,Sangli,16.8576712,74.5902924,Housing Society
+2,Shivbala Dadge Sankul Co-op Housing Society,Vishrambag,Sangli,16.8558009,74.5937287,Housing Society
+3,Palash,Vishrambag,Sangli,16.8347625,74.5897656,Housing Society
+4,Shivaji Housing Society,Chavan Colony,Sangli,16.8802211,74.5825576,Housing Society
+5,Mira Housing Society,Gokul Nagar,Sangli,16.8657521,74.5809318,Housing Society
+6,Sukhakarta Residency,Vishrambag,Sangli,16.8520678,74.6007829,Apartment
+7,Ahilyadevi Housing Society,Abhay Nagar,Sangli,16.8683663,74.5896576,Housing Society
+8,Vasantnagar Housing Society,Kupwad,Kupwad,16.8712239,74.6019615,Housing Society
+9,Khare Housing Owners Co-op Society,Vishrambag,Sangli,16.8343189,74.5931584,Housing Society
+10,MSEB Housing Society,Vishrambag,Sangli,16.8374947,74.5950621,Housing Society
+11,Nandan Housing Society,Gandhi Nagar,Sangli,16.8481409,74.5919970,Housing Society
+12,Swapnanagri,Meera Colony,Sangli,16.8366715,74.5966139,Colony
+13,Vrindavan,Vishrambag,Sangli,16.8565690,74.6035330,Housing Complex
+14,Vision City,Bhakti Nagar,Sangli,16.8389020,74.5876699,Housing Society
+15,Siddhivastupuram,Revenue Colony,Sangli,16.8481527,74.5825117,Township
+16,Dream Avenue Apartment,Gokul Nagar,Sangli,16.8573340,74.5734880,Apartment
+17,Namrata Apartments,South Shivaji Nagar,Sangli,16.8503286,74.5811022,Apartment
+18,Indoshiva Pride,Bapat Mala,Sangli,16.8494790,74.5824055,Apartment
+19,Gloria,Vyankatesh Nagar,Sangli,16.8689217,74.5742232,Apartment
+20,Siddhivinayak Prerna Apartments,North Shivaji Nagar,Sangli,16.8592053,74.5753395,Apartment
+21,Anandvan Housing Society,Shivaji Nagar,Miraj,16.8317734,74.6392730,Housing Society
+22,Gajanan Housing Society,Chandanwadi,Miraj,16.8387472,74.6324991,Housing Society
+23,Ganesh Housing Society,Othonial Colony,Miraj,16.8356902,74.6517869,Housing Society
+24,Omgeeta Co-op Housing Society,Savarkar Colony,Sangli,16.8459239,74.5928919,Housing Society
+25,Government Servants Co-op Housing Society,Khatib Nagar,Miraj,16.8364841,74.6424125,Housing Society
+26,Isrial Nagar Group Housing Society,Government Colony,Miraj,16.8366691,74.6442059,Housing Society
+27,Godrej Housing Society,Miraj MIDC,Miraj,16.8456925,74.6325956,Housing Society
+28,Siddhivalbh Krupa Residential Building,Mahavir Colony,Sangli,16.8384923,74.5869869,Housing Complex
+29,Radhika Nagari,Vinayak Nagar,Sangli,16.8483565,74.6205213,Township
+30,Rajyog Bunglow Arihant Park,Gayatri Nagar,Sangli,16.8350990,74.6030963,Bungalow Scheme
+31,Mangalwar Peth Residential Area,Mangalwar Peth,Madhavnagar,16.8898727,74.5830968,Colony
+32,Ajinkyanagar,Madhavnagar,Madhavnagar,16.8854484,74.5766036,Colony
+33,Gomtesh Nagar,Yashwant Nagar,Kupwad,16.8745242,74.6040183,Colony
+34,Sai Nagar Sangliwadi,Sangliwadi,Sangliwadi,16.8611126,74.5488281,Colony
+35,Trishul Chowk Residential Area,Sangliwadi,Sangliwadi,16.8596940,74.5548350,Colony
+36,Vasant Residency,Rukmini Nagar,Sangli,16.8385118,74.5669989,Apartment
+37,Yashoda Park,Ram Nagar,Sangli,16.8416419,74.5595322,Apartment
+38,Anna Satyagonda Patil Nagar,Gaon Bhag,Sangli,16.8519212,74.5610060,Colony
+39,Ganesh Colony,Patrakar Nagar,Sangli,16.8517825,74.5636405,Colony
+40,Sarthak Sangameshwar Colony,Ram Nagar,Sangli,16.8478020,74.5570200,Colony
+41,Shivsangam Sahanivas,Rajmati Colony,Sangli,16.8513827,74.5599335,Apartment
+42,Shri Kapila Apartments,Haripriyanagar,Sangli,16.8442961,74.5980333,Apartment
+43,Sai Shree Ram Apartment,Meera Colony,Sangli,16.8399512,74.6001378,Apartment
+44,Shree Samarth Padma,Dattanagar,Sangli,16.8389463,74.5957744,Apartment
+45,Ramanand Apartment,Vidyanagar,Sangli,16.8516638,74.6048237,Apartment
+46,Rajmati Complex,Neminathnagar,Sangli,16.8484900,74.5916594,Apartment
+47,Ramratna Residency,Viya Nagar,Sangli,16.8412263,74.6017274,Apartment
+48,Shree Sai Bungalow,Haripriyanagar,Sangli,16.8442478,74.5968528,Bungalow
+49,Sahyadri Housing Society,Kupwad,Kupwad,16.8702220,74.5986480,Housing Society
+50,Bhagyodaya Housing Society,Chaitanyanagar,Sangli,16.8747169,74.5968287,Housing Society
+51,Radhai Bunglow,Yashwant Nagar,Kupwad,16.8727502,74.6004863,Bungalow
+52,Aashirwad Bungalow,Kupwad,Kupwad,16.8780550,74.5979290,Bungalow
+53,Nivaruti Nivas,Gomtesh Nagar,Kupwad,16.8730627,74.6057883,Bungalow
+54,Anand Niwas,Kupwad,Kupwad,16.8750734,74.6055492,Bungalow
+55,Vikrant Empire,Vijaynagar,Sangli,16.8438480,74.6135331,Housing Complex
+56,Arihant Nano Emerald,Nalininagar,Sangli,16.8367552,74.6180037,Apartment
+57,Siddhivinayak Laxmi Apartment,Warnali,Sangli,16.8499651,74.6062804,Apartment
+58,Varad Icon,Vijaynagar,Sangli,16.8467996,74.6089734,Apartment
+59,Malhar Residency,Nagraj Colony,Sangli,16.8388930,74.6091340,Apartment
+60,Shivam Elite,Vijaynagar,Sangli,16.8471302,74.6100120,Apartment
+61,Adinath Galaxy,Vijaynagar,Sangli,16.8413511,74.6101582,Apartment
+62,Soham Residency,Vinayak Nagar,Sangli,16.8481238,74.6141145,Apartment
+63,Chaitanya Sagar Co-op Housing Society,Dattanagar,Sangli,16.8461202,74.5795435,Housing Society
+64,Gajanan Co-op Housing Society,Rayanade,Sangli,16.8554468,74.5980841,Housing Society
+65,Pavan Putra Co-op Housing Society,Nishant Colony,Sangli,16.8456160,74.5809858,Housing Society
+66,SSA Co-op Housing Society,Nishant Colony,Sangli,16.8518798,74.5825979,Housing Society
+67,Shriram Nagar Lane 12,Wanlesswadi,Sangli,16.8345750,74.6063691,Colony
+68,Satralkar Square,Vijaynagar,Sangli,16.8434886,74.6106128,Housing Complex
+69,Vijayansh Apartment,Shriram Nagar,Sangli,16.8370565,74.6083038,Apartment
+70,Paradise 2,Sainik Nagar Wanlesswadi,Sangli,16.8451577,74.6145834,Apartment
+71,Shramsaflya Niwas,Wanlesswadi,Sangli,16.8388041,74.6161609,Housing Complex
+72,Nakshatra Residency,Vijaynagar,Sangli,16.8449602,74.6116613,Apartment
+73,Harikrupa Niwas,Haripur,Haripur,16.8480625,74.5468125,Bungalow
+74,Moraya Residency,Haripur,Haripur,16.8462589,74.5426923,Apartment
+75,Bageshri Bungalow,"Shivanand Park, Haripur Road",Haripur,16.8471824,74.5469598,Bungalow
+76,Shivalay,Nilkantha Nagar,Sangli,16.8460230,74.5550220,Apartment
+77,Rugved,Nilkanth Nagar,Sangli,16.8485071,74.5572955,Bungalow
+78,Vimal Residency,"Ram Nagar, Kolhapur Road",Sangli,16.8404241,74.5628788,Residential Plots
+79,Galaxy Residency,Vasant Park Chougle Plot,Sangli,16.8478591,74.5619085,Apartment
+80,Varad Residency (Kolhapur Road),Ram Nagar,Sangli,16.8431246,74.5617408,Apartment
+81,Varad Residency (Annaso Patil Nagar),Gaon Bhag,Sangli,16.8508417,74.5602765,Apartment
+82,Nirmiti Residency,Chintamani Nagar,Sangli,16.8730140,74.5849543,Apartment
+83,Gangadhar Mathad Residency,Basaveshwar Colony,Miraj,16.8195442,74.6288665,Housing Complex
+84,Shree Ganesh Colony,Budhgaon,Budhgaon,16.9040494,74.5975034,Colony
+85,Anandvan Colony,Vishnuannanagar,Kavalapur,16.9154739,74.6073744,Colony
+86,Durga Mata Colony,Shaniwar Peth,Madhavnagar,16.8963660,74.5828862,Colony
+87,Shikshak Colony,Kavalapur,Kavalapur,16.9213738,74.6076118,Colony
+88,Indira Apartment,North Shivaji Nagar,Sangli,16.8606470,74.5762146,Apartment
+89,Shree Datta Residency,South Shivaji Nagar,Sangli,16.8530482,74.5812865,Apartment
+90,Lohia House Shanti Residency,North Shivaji Nagar,Sangli,16.8599972,74.5786430,Apartment
+91,Nasa Capital,North Shivaji Nagar,Sangli,16.8613836,74.5783928,Apartment
+92,Kore Garden Apartment,Gulmohar Colony,Sangli,16.8481813,74.5815448,Apartment
+93,Green Park,Miraj Madhavnagar Road,Sangli,16.8534472,74.6227367,Residential Plots
+94,Chinmay Park,Yashwantnagar,Sangli,16.8726388,74.5975589,Housing Society
+95,Abhay Nagar,Arwade Park,Sangli,16.8674242,74.5902077,Housing Complex
+96,Vrindavan Villas Township,Vishrambag,Sangli,16.8323835,74.5991987,Township
+97,Brahm Chaitanya Vrindavan Villa Township,Vishrambag,Sangli,16.8327015,74.5997584,Township
+98,Vaheguru Niwas,Vasant Park Chougle Plot,Sangli,16.8478303,74.5611344,Bungalow
+99,Parshwanath Nagar (Kupwad Road),Balajinagar,Sangli,16.8635082,74.6035025,Colony
+100,Laxmi Nagar,Tuljainagar,Sangli,16.8615360,74.6032134,Colony
+101,Parshwanath Nagar,Tilak Nagar,Sangli,16.8628735,74.6037093,Colony
+102,Ankuj Nagar,Tilak Nagar,Sangli,16.8626857,74.6050891,Colony
+103,Utkarsh Nagar,Kupwad MIDC Road,Kupwad,16.8642580,74.6039292,Colony
+104,Ratnatray Colony,Abhay Nagar,Sangli,16.8647560,74.5987254,Colony
+105,Samrudhinagar,Tuljainagar,Sangli,16.8606378,74.5977166,Colony
+106,Shardanagar,Tuljainagar,Sangli,16.8607180,74.6042293,Colony
+107,Vasanti Apartment,Khanbhag,Sangli,16.8574041,74.5732008,Apartment
+108,Dharmaratna Complex,Khanbhag,Sangli,16.8619228,74.5665422,Housing Complex
+109,Grand View Apartments,Chandanwadi,Miraj,16.8407245,74.6363280,Apartment
+110,Galaxy Apartment,Fort Area,Miraj,16.8195014,74.6505872,Apartment
+111,Mayuresh Apartment,Fort Area,Miraj,16.8200289,74.6535356,Apartment
+112,Glen Avenue,Shivaji Nagar,Miraj,16.8318579,74.6417305,Apartment
+113,Unique Residency,Brahmanpuri,Miraj,16.8277123,74.6518112,Apartment
+114,Akash Ganga Apartment,Othonial Colony,Miraj,16.8347088,74.6490615,Apartment
+115,Sainandan Enclave Apartment,Rama Udyan,Miraj,16.8383488,74.6531216,Apartment
+116,Shivakunj Apartment,Nadi Ves,Miraj,16.8164896,74.6465643,Apartment
+117,Galaxy Residency (Miraj),Miraj MIDC,Miraj,16.8452518,74.6330618,Apartment
+118,Valli Palace,Khatib Nagar,Miraj,16.8362868,74.6414096,Apartment
+119,Kohinoor Residency,Nipanikar Colony,Miraj,16.8345991,74.6414679,Apartment
+120,Taramohan Bungalow,Somwar Peth,Madhavnagar,16.8886867,74.5853099,Bungalow
+121,Sai Colony,MIDC Kupwad,Kupwad,16.8716800,74.6280581,Colony
+122,Rajhas Colony,Ulhas Nagar,Kupwad,16.8729972,74.6211084,Colony
+123,Vrindavan Colony,Kupwad,Kupwad,16.8657688,74.6164457,Colony
+124,Samarth Colony,Kupwad,Kupwad,16.8774806,74.6144116,Colony
+125,Shant Colony,Ulhas Nagar,Kupwad,16.8721594,74.6204499,Colony
+126,Vasant Colony (Miraj Road),MIDC Industrial Area,Miraj,16.8379227,74.6302953,Colony
+127,Ekta Colony,Vasant Colony,Sangli,16.8573937,74.5870394,Colony
+128,Akashdarshan Apartment,Padmavathi Colony,Sangli,16.8443000,74.5886000,Apartment
+129,Shiv Hardik Green Acres,Dhamani Road,Sangli,16.8319328,74.5867844,Apartment
+130,Onkar Paradise,Old Dhamani Road,Sangli,16.8363932,74.5864569,Apartment
+131,Sejal Heights,Dattanagar,Sangli,16.8404770,74.5873259,Apartment
+132,Raghukul Residency,Dhamani Road,Sangli,16.8394726,74.5859617,Apartment
+133,Atulyam Apartment,Vishrambag,Sangli,16.8355842,74.5892378,Apartment
+134,Rohini Apartment,Nishant Colony,Sangli,16.8466846,74.5852287,Apartment
+135,Bhagirathi Sankul,Warnali Road,Sangli,16.8532531,74.6044448,Apartment
+136,Tulajai Sahniwas,Gaon Bhag,Sangli,16.8569182,74.5593698,Apartment
+137,Sawali,Patrakar Nagar,Sangli,16.8488835,74.5725515,Housing Complex
+138,Sawali Bungalow,Chanakyapuri Colony,Sangli,16.8418372,74.5928630,Bungalow
+139,Samarth Residency,Nagraj Colony,Sangli,16.8431963,74.5900759,Apartment
+140,Ravitej Residency,Pragati Colony,Sangli,16.8434296,74.5851688,Apartment
+141,Apurva Residency,Vishrambag 100 Feet Road,Sangli,16.8456474,74.5898901,Apartment
+142,Nisarg Apartment,Vishrambag 100 Feet Road,Sangli,16.8439860,74.5963992,Apartment
+143,Harmony Residency,Vishrambag,Sangli,16.8466487,74.5948764,Housing Complex
+144,Vinaya Residency,Gandhi Nagar,Sangli,16.8473360,74.5927042,Apartment
+145,Amit Residency,Savarkar Colony,Sangli,16.8440381,74.5928073,Apartment
+146,Isha Residency,Gulmohar Colony,Sangli,16.8471265,74.5794003,Apartment
+147,Sainath Residency,Patrakar Nagar,Sangli,16.8489985,74.5643541,Apartment
+148,Seven Hills,"Dhamani Road, Gandhi Nagar",Sangli,16.8485951,74.5881641,Housing Complex
+149,Chha. Sambhaji Colony,Timber Area,Sangli,16.8645744,74.5808393,Colony
+150,Shivanand Home,Timber Area,Sangli,16.8625599,74.5807115,Bungalow
+151,Kamalabai Pane Nivas,Timber Market Road,Sangli,16.8618094,74.5827256,Bungalow
+152,Arihant Bunglow Row House,Samastanagar,Sangli,16.8365720,74.6181103,Row House
+153,Nisarg Bungalow,Sai Nagar,Kupwad,16.8696951,74.6094599,Bungalow
+154,Vivekanand Housing Society,Tuljainagar,Sangli,16.8619030,74.6092392,Housing Society
+155,Ramkrishna Nagar,Kupwad,Kupwad,16.8712952,74.6085730,Colony

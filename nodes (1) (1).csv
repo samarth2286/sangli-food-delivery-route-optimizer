@@ -1,0 +1,80 @@
+id,name,lat,lon,x,y,type,role,area,deg,label
+sangli_st_stand,Sangli ST Bus Stand,16.8565,74.569,71.36767391044704,16.8565,junction,structure,Sangli,5,True
+station_road,Station Road,16.858,74.5715,71.37006658280117,16.858,junction,structure,Sangli,4,False
+harbhat_road,Harbhat Road,16.854,74.5668,71.36556835877539,16.854,junction,structure,Sangli,3,True
+gaon_bhag,Gaon Bhag,16.8555,74.564,71.36288856573874,16.8555,junction,structure,Sangli,3,False
+timber_area,Timber Area,16.852,74.57,71.36863097938868,16.852,junction,structure,Sangli,3,False
+sangli_south_jn,Sangli South Junction,16.8478,74.568,71.36671684150538,16.8478,junction,structure,Sangli,4,False
+sangli_railway_stn,Sangli Railway Station,16.8608,74.5745,71.37293778962615,16.8608,landmark,structure,Sangli,3,True
+civil_hospital,Sangli Civil Hospital,16.8558,74.5752,71.37360773788531,16.8558,landmark,structure,Sangli,2,False
+market_yard,Market Yard (Turmeric),16.8625,74.5595,71.35858175550129,16.8625,landmark,structure,Sangli,5,True
+rajwada,Rajwada,16.8512,74.5645,71.36336710020957,16.8512,landmark,structure,Sangli,5,True
+ganapati_mandir,Ganapati Mandir,16.8485,74.5628,71.36174008300875,16.8485,landmark,structure,Sangli,4,True
+amrai_garden,Aamrai Garden,16.8455,74.5585,71.35762468655963,16.8455,landmark,structure,Sangli,4,True
+irwin_bridge,Irwin Bridge,16.8438,74.5608,71.35982594512544,16.8438,junction,structure,Sangli,3,True
+south_bridge,Sangli South Bridge,16.8395,74.57,71.36863097938868,16.8395,junction,structure,Sangli,2,True
+khanbhag,Khanbhag,16.8592,74.5628,71.36174008300875,16.8592,customer_area,dropoff,Sangli,4,False
+shivaji_nagar,Shivaji Nagar,16.85,74.576,71.37437339303862,16.85,customer_area,dropoff,Sangli,4,False
+balaji_nagar,Balaji Nagar,16.8545,74.578,71.37628753092196,16.8545,customer_area,dropoff,Sangli,3,False
+timber_area_res,Timber Area Residential,16.8528,74.5718,71.37035370348367,16.8528,customer_area,dropoff,Sangli,2,False
+rajwada_peth,Rajwada Peth,16.85,74.562,71.36097442785542,16.85,customer_area,dropoff,Sangli,2,False
+sangliwadi,Sangliwadi,16.8362,74.5548,71.3540835314755,16.8362,customer_area,dropoff,Sangliwadi,2,True
+sangliwadi_east,Sangliwadi East,16.834,74.56,71.35906028997212,16.834,customer_area,dropoff,Sangliwadi,2,False
+rest_harbhat,Harbhat Road Eatery,16.8543,74.5675,71.36623830703454,16.8543,restaurant,pickup,Sangli,2,False
+rest_station_rd,Station Road Restaurant,16.8575,74.5708,71.36939663454203,16.8575,restaurant,pickup,Sangli,2,False
+rest_gaon_bhag,Gaon Bhag Khanaval,16.8552,74.5652,71.36403704846875,16.8552,restaurant,pickup,Sangli,2,False
+rest_rajwada,Rajwada Family Restaurant,16.8508,74.5658,71.36461128983373,16.8508,restaurant,pickup,Sangli,2,False
+rest_market_yard,Market Yard Dhaba,16.8615,74.561,71.36001735891378,16.8615,restaurant,pickup,Sangli,2,False
+rest_amrai,Aamrai Garden Cafe,16.8462,74.5598,71.35886887618378,16.8462,restaurant,pickup,Sangli,2,False
+smr_north,Sangli-Miraj Rd (north),16.851,74.585,71.38298701351354,16.851,junction,structure,Sangli,3,True
+smr_mid,Sangli-Miraj Rd (mid),16.849,74.5915,71.38920796163431,16.849,junction,structure,Vishrambag,3,False
+smr_south,Sangli-Miraj Rd (south),16.838,74.614,71.41074201282161,16.838,junction,structure,Vishrambag,6,True
+kupwad_link,Kupwad Link Road,16.856,74.618,71.41457028858824,16.856,junction,structure,Kupwad,3,False
+vishrambag_chowk,Vishrambag Chowk,16.847,74.5985,71.39590744422593,16.847,junction,structure,Vishrambag,8,True
+dhamani_road,Dhamani Road,16.8498,74.5952,71.39274911671846,16.8498,junction,structure,Vishrambag,6,True
+college_corner,College Corner,16.8442,74.5975,71.39495037528427,16.8442,junction,structure,Vishrambag,5,False
+campus_gate_north,Campus North Gate,16.848,74.602,71.39925718552173,16.848,junction,structure,Vishrambag,4,False
+campus_inner,Campus Inner Road,16.845,74.6025,71.39973571999256,16.845,junction,structure,Vishrambag,4,False
+vishrambag_east,Vishrambag East,16.8462,74.607,71.40404253023002,16.8462,junction,structure,Vishrambag,4,False
+vishrambag_south,Vishrambag South,16.842,74.599,71.39638597869676,16.842,junction,structure,Vishrambag,3,False
+walchand_gate,Walchand College Main Gate,16.8456,74.6016,71.39887435794506,16.8456,landmark,structure,Vishrambag,6,True
+wce_academic,WCE Academic Block,16.8452,74.6002,71.39753446142674,16.8452,landmark,structure,Vishrambag,5,False
+willingdon_college,Willingdon College,16.8448,74.5995,71.39686451316759,16.8448,landmark,structure,Vishrambag,2,True
+wce_hostel_a,WCE Hostel Block A,16.8443,74.6035,71.40069278893421,16.8443,hostel,dropoff,Vishrambag,3,False
+wce_hostel_b,WCE Hostel Block B,16.8437,74.6045,71.40164985787587,16.8437,hostel,dropoff,Vishrambag,2,False
+wce_hostel_c,WCE Hostel Block C,16.8432,74.603,71.40021425446338,16.8432,hostel,dropoff,Vishrambag,2,False
+wce_hostel_girls,WCE Girls Hostel,16.8465,74.6042,71.40136273719338,16.8465,hostel,dropoff,Vishrambag,3,True
+wce_staff_qtrs,WCE Staff Quarters,16.847,74.6055,71.40260692681753,16.847,customer_area,dropoff,Vishrambag,2,False
+government_colony,Government Colony,16.8478,74.6062,71.40327687507668,16.8478,customer_area,dropoff,Vishrambag,2,False
+vishrambag_res,Vishrambag Residential,16.8432,74.5948,71.3923662891418,16.8432,customer_area,dropoff,Vishrambag,3,False
+vishrambag_society,Vishrambag Housing Society,16.8412,74.5965,71.39399330634262,16.8412,customer_area,dropoff,Vishrambag,2,False
+willingdon_hostel,Willingdon Hostel,16.8438,74.5962,71.39370618566011,16.8438,customer_area,dropoff,Vishrambag,2,False
+rest_food_lab,Food Lab,16.8475,74.5972,71.39466325460177,16.8475,restaurant,pickup,Vishrambag,3,False
+rest_world_foodies,World of Foodies,16.8462,74.596,71.39351477187178,16.8462,restaurant,pickup,Vishrambag,2,False
+rest_chowk_cafe,Vishrambag Chowk Cafe,16.8478,74.5992,71.39657739248509,16.8478,restaurant,pickup,Vishrambag,2,False
+rest_vishram,Hotel Vishram,16.8466,74.5998,71.39715163385009,16.8466,restaurant,pickup,Vishrambag,2,False
+rest_campus_corner,Campus Corner Snacks,16.8448,74.6008,71.39810870279175,16.8448,restaurant,pickup,Vishrambag,2,False
+rest_belge_bistro,Belge Bistro,16.8488,74.594,71.39160063398846,16.8488,restaurant,pickup,Vishrambag,2,False
+rest_dhamani,Dhamani Road Restaurant,16.8505,74.5935,71.39112209951764,16.8505,restaurant,pickup,Vishrambag,2,False
+miraj_junction,Miraj Junction,16.8215,74.639,71.43466873636304,16.8215,landmark,structure,Miraj,5,True
+miraj_chowk,Miraj Chowk,16.82,74.642,71.43753994318801,16.82,junction,structure,Miraj,3,False
+miraj_bus_stand,Miraj Bus Stand,16.818,74.6435,71.4389755466005,16.818,junction,structure,Miraj,3,True
+miraj_medical,Miraj Medical College,16.8232,74.636,71.43179752953807,16.8232,landmark,structure,Miraj,3,False
+miraj_res,Miraj Residential,16.815,74.647,71.44232528789631,16.815,customer_area,dropoff,Miraj,2,False
+miraj_wanless,Wanless Colony,16.8245,74.641,71.43658287424637,16.8245,customer_area,dropoff,Miraj,2,False
+miraj_station_area,Miraj Station Area,16.8225,74.6445,71.43993261554216,16.8225,customer_area,dropoff,Miraj,2,False
+rest_miraj_station,Miraj Station Restaurant,16.821,74.6412,71.4367742880347,16.821,restaurant,pickup,Miraj,2,False
+rest_miraj_bus,Bus Stand Eatery,16.8188,74.6428,71.43830559834134,16.8188,restaurant,pickup,Miraj,2,False
+rest_miraj_medical,Medical College Canteen,16.8238,74.6378,71.43352025363306,16.8238,restaurant,pickup,Miraj,2,False
+kupwad_junction,Kupwad Road Junction,16.865,74.625,71.42126977117985,16.865,junction,structure,Kupwad,4,True
+kupwad_gaon,Kupwad Gaon,16.8758,74.644,71.43945408107133,16.8758,customer_area,dropoff,Kupwad,2,False
+kupwad_housing,Kupwad Housing Colony,16.878,74.648,71.44328235683795,16.878,customer_area,dropoff,Kupwad,3,False
+kupwad_midc,Kupwad MIDC,16.8806,74.6511,71.4462492705571,16.8806,customer_area,dropoff,Kupwad,3,True
+rest_kupwad,MIDC Canteen,16.879,74.6495,71.44471796025046,16.879,restaurant,pickup,Kupwad,2,False
+madhavnagar_road,Madhavnagar Road,16.879,74.58,71.37820166880526,16.879,junction,structure,Madhavnagar,3,False
+madhavnagar_res,Madhavnagar Residential,16.889,74.585,71.38298701351354,16.889,customer_area,dropoff,Madhavnagar,3,False
+madhavnagar,Madhavnagar,16.8922,74.5881,71.38595392723269,16.8922,customer_area,dropoff,Madhavnagar,3,True
+rest_madhavnagar,Madhavnagar Hotel,16.8905,74.5868,71.38470973760853,16.8905,restaurant,pickup,Madhavnagar,2,False
+ashta_road,Sangli-Ashta Road,16.864,74.542,71.34183304902228,16.864,junction,structure,Sangli,3,True
+budhgaon_college,Budhgaon College Area,16.8685,74.5185,71.31934192889334,16.8685,customer_area,dropoff,Budhgaon,2,False
+budhgaon,Budhgaon,16.87,74.515,71.31599218759753,16.87,customer_area,dropoff,Budhgaon,1,True

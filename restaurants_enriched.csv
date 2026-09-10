@@ -1,0 +1,32 @@
+id,code,name,address,lat,lon,category,rating,reviews,nearest_node,distance_to_node_km
+R_R001,R001,The Kapital Kitchen,"Next Hutatma Smarak, Sangli - Miraj Rd, Nishant Colony, Sangli, Maharashtra 416416",16.8516125,74.586329,North Indian restaurant,4.6,2815,smr_north,0.157
+R_R002,R002,Pride Kitchen's Hyderabadi Biryani Sangli,"100 Feet Rd, opp. D-Mart, near Datta Sai Mandir, Sangli, Maharashtra 416416",16.8462709,74.5763719,Biryani restaurant,4.8,1115,hundred_ft_dmart,0.196
+R_R003,R003,Masala Bay Multicusine Restaurant Sangli,"1st Floor, 100 Feet Rd, opp. Diamond Hotel, Sangli, Maharashtra 416416",16.8458782,74.5866443,Vegetarian restaurant,4.9,11,smr_north,0.596
+R_R004,R004,Kake di Hatti Sangli,"Opposite Parshwanath Colony Road No. 3, Dhamani Rd, near Awati Motors, Sangli, Maharashtra 416416",16.8424811,74.5888508,Restaurant,4.1,871,vishrambag_res,0.638
+R_R005,R005,HOTEL VEG VILLA,"546/1, Kolhapur - Sangli Hwy, opp. Life Care Hospital, Sangli, Maharashtra 416416",16.8491024,74.5626984,Pure vegetarian restaurant,4.4,482,ganapati_mandir,0.068
+R_R006,R006,Domino's Pizza | Sangli,"Venkatesh Asset, Sangli Miraj Road, Opposite Church, Sangli, Maharashtra 416416",16.8553436,74.5766691,Pizza restaurant,4.1,4077,civil_hospital,0.164
+R_R007,R007,"THALIWALA BY HARMAN, SANGLI","100 Feet Rd, below The Ashta People's Co-operative Bank, Sangli, Maharashtra 416416",16.8458747,74.5867833,Vegetarian restaurant,4.6,1163,smr_north,0.601
+R_R008,R008,Planet Family Resto,"Sangli Bypass Rd, opp. New Pride, Sangli, Maharashtra 416416",16.8691265,74.5755713,Restaurant,4.3,234,sangli_railway_stn,0.933
+R_R009,R009,Delicious Restaurant,"Midtown Complex, C.S. No. 587, Near Military Canteen, 100 Feet Rd, Sangli, Maharashtra 416416",16.8458659,74.5882029,Indian restaurant,3.8,1278,smr_mid,0.495
+R_R010,R010,Ajwaa Restaurant,"Bus Stop, Jal Bhavan, Sangli, Nishant Colony, Maharashtra 416416",16.8508267,74.5886369,Biryani restaurant,3.8,1522,smr_mid,0.366
+R_R011,R011,KRANTI BHOJNALAY,"Shop No. 2, Miraj Rd, Sangli, Vishrambag, Maharashtra 416414",16.8422368,74.6122879,Restaurant,4.1,1397,smr_south,0.505
+R_R012,R012,Dalchini - Vegetarian Goodness,"Dhamani Rd, near Venkatesh Tirth, Parshwanath Colony, Dattanagar, Sangli, Maharashtra 416415",16.8404563,74.5884734,Vegetarian restaurant,4.0,1189,vishrambag_res,0.739
+R_R013,R013,Hotel Orchid Pureveg (Sangli),"Sphurti Chowk, Sangli, Vishrambag, Maharashtra 416415",16.8406206,74.5969841,Restaurant,4.3,719,vishrambag_society,0.082
+R_R014,R014,O'NEST Aroma,"Kolhapur - Sangli Hwy, near Old Kusti Aakhada, Dattanagar, Sangli, Maharashtra 416416",16.8470123,74.5631544,Restaurant,4.8,2078,ganapati_mandir,0.17
+R_R015,R015,Woodcrust,"Seven Hills Apartment, Gundappa Anna Shantappa Kante Marg, Neminathnagar, Sangli, Maharashtra 416416",16.8484178,74.5878462,Pizza restaurant,4.5,334,smr_mid,0.394
+R_R016,R016,Ira - Restaurant & Lawn - Pure Veg,"Shatrunjay Nagar, Kolhapur - Sangli Hwy, near True Value Showroom, Ram Nagar, Sangli, Maharashtra 416416",16.8397332,74.5639139,Restaurant,4.5,561,irwin_bridge,0.561
+R_R017,R017,Hotel Navaratna - Pancharatna,"32A, Amrai Rd, Sangli, Khanbhag, Maharashtra 416416",16.8595165,74.5731414,South Indian restaurant,4.1,5217,sangli_railway_stn,0.203
+R_R018,R018,Winterfall Italian Finest,"Old Dhamni Road, Hasara Chowk, Dr. APJ Abdul Kalam Marg, Sangli, Maharashtra 416416",16.8387657,74.586148,Restaurant,4.3,496,vishrambag_res,1.045
+R_R019,R019,Rahamatullah Restaurant Sangli,"Sangli - Miraj Rd, Gandhi Nagar, Vishrambag, Sangli, Maharashtra 416415",16.8492758,74.5923684,Restaurant,3.6,378,smr_mid,0.097
+R_R020,R020,Rupali Thali House Restaurant Veg Hotel,"Sangli - Miraj Rd, beside Bank of India, Vishrambag, Sangli, Maharashtra 416415",16.8490351,74.5932245,Restaurant,4.6,45,rest_belge_bistro,0.087
+R_R021,R021,Poonam Bhoj,"Ground Floor, Hotel Season Four, Sangli, Vishrambag, Maharashtra 416415",16.8502121,74.592025,Restaurant,4.5,61,smr_mid,0.146
+R_R022,R022,Green Taj Restaurant,"100 Feet Rd, near Pakija Masjid, Dattanagar, Sangli, Maharashtra 416416",16.847587,74.5693554,Restaurant,3.9,362,sangli_south_jn,0.146
+R_R023,R023,Madhava's Family Restaurants,"Spurti Chowk, 80 Feet Rd, Sangli, Vishrambag, Maharashtra 416415",16.8396195,74.596652,Vegetarian restaurant,4.3,23,vishrambag_society,0.176
+R_R024,R024,Hotel Savad Family Restaurant,"Ground Floor, Tyzer Shop, Rajlaxmi Complex, Sangli - Miraj Rd, near Vishrambag, Sangli, Maharashtra 416415",16.8492289,74.5928617,Restaurant,4.0,36,rest_belge_bistro,0.13
+R_R025,R025,Hotel Shalimar,"977, Jai Bhavani Chowk, near Khanbhag, Sangli, Maharashtra 416416",16.8569333,74.5688934,Biryani restaurant,4.1,918,sangli_st_stand,0.049
+R_R026,R026,24K Kraft Brewzz,"Siddhivinayak Fortune, Vijaynagar - Kupwad Road, Sangli - Miraj Rd, Sangli, Maharashtra 416415",16.8440489,74.6105963,Restaurant,4.5,1200,vishrambag_east,0.451
+R_R027,R027,Hotel Sarovar,"Shri Complex, 100 Feet Rd, Sangli, Vishrambag, Maharashtra 416415",16.8452284,74.5956813,Vegetarian restaurant,4.0,1998,rest_world_foodies,0.113
+R_R028,R028,Shree Durvankur Dining Hall,"A Wing, Kuber Chambers, Harbhat Rd, Sangli, Gaon Bhag, Maharashtra 416416",16.8600997,74.5617951,Marathi restaurant,4.3,1166,khanbhag,0.146
+R_R029,R029,Hotel Vishwjeet,"Kore Corner, Sangli, Vishrambag, Maharashtra 416415",16.8503576,74.5971134,Non-vegetarian restaurant,4.0,123,dhamani_road,0.213
+R_R030,R030,CRCC SANGLI,"6th Floor, Centre One Building, above Aurum Cinemas, Vijaynagar, Sangli, Maharashtra 416415",16.8438819,74.6099801,Restaurant,4.3,1135,vishrambag_east,0.409
+R_R031,R031,Naivedya,"Sangli, Maharashtra 416416",16.8603921,74.5695422,Indian / vegetarian restaurant,3.9,18,station_road,0.338
