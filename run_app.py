@@ -28,7 +28,7 @@ def main():
     print("=" * 65)
     print(f"Starting local server at: http://localhost:{PORT}")
     print("Features loaded:")
-    print("  - 🗺️ Real Interactive Map of Sangli (Leaflet + OpenStreetMap)")
+    print("  - 🗺️ Real Interactive Map of Sangli (Leaflet + Esri WorldStreetMap)")
     print("  - 🍽️ 31 Real Restaurants in Sangli with categories & ratings")
     print("  - 🏡 155 Residential Housing Societies & Colonies")
     print("  - ⚡ Dijkstra & A* Routing (Shortest Distance vs Fastest Time)")

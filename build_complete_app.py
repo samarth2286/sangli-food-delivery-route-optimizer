@@ -918,12 +918,12 @@ function initMap() {{
     attributionControl: false
   }}).setView([16.8524, 74.5815], 13);
 
-  // 100% Free, Watermark-Free Standard OpenStreetMap Tiles
-  L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
+  // Esri World Street Map (Works seamlessly on file://, http://, zero watermarks, zero 403 blocks)
+  const streetTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{{z}}/{{y}}/{{x}}', {{
     maxZoom: 19,
-    subdomains: ['a', 'b', 'c'],
-    attribution: '&copy; OpenStreetMap contributors'
-  }}).addTo(map);
+    attribution: 'Tiles &copy; Esri &mdash; Sangli Map'
+  }});
+  streetTiles.addTo(map);
 
   // Add layer groups
   roadLayersGroup.addTo(map);
